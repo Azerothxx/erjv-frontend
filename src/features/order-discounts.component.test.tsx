@@ -1,3 +1,4 @@
+import { noLastEditor } from '@/test/last-edited'
 import type { OrderFormValues } from './crm/sales-order-entry.types'
 import type { CreatePurchaseOrderPayload } from './logistics/purchase-orders.types'
 import type { SavedOrder } from '@/hooks/use-order-submission'
@@ -397,7 +398,7 @@ describe.each(['sales', 'purchase'] as const)('%s line discount editor', (kind) 
 
 it('retains a fixed PO discount, saved VAT, notes and every intended line on draft replacement', async () => {
   const user = userEvent.setup()
-  const draft: PurchaseOrderRecord = {
+  const draft: PurchaseOrderRecord = { ...noLastEditor,
     id: 7,
     revision: 1,
     orderNumber: 'PO-7',

@@ -1,3 +1,4 @@
+import { noLastEditor } from '@/test/last-edited'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -30,7 +31,7 @@ beforeEach(() => {
   blocked = undefined
   vi.spyOn(toast, 'success').mockReturnValue('success')
   vi.spyOn(toast, 'error').mockReturnValue('error')
-  run = {
+  run = { ...noLastEditor,
     id: 1,
     revision: 4,
     runNumber: 'RUN-1',
@@ -51,7 +52,7 @@ beforeEach(() => {
     createdAt: '',
     updatedAt: '',
   }
-  deliveries = [8, 9].map((id) => ({
+  deliveries = [8, 9].map((id) => ({ ...noLastEditor,
     id,
     revision: 3,
     deliveryNumber: `OD-${id}`,

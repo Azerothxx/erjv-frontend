@@ -67,8 +67,6 @@ export function OrderProductCatalog({
       header: 'Add',
       width: 60,
       align: 'center',
-      className: 'px-2',
-      headerClassName: 'px-2',
       cell: ({ row }) => (
         <DataTableActions>
           <Button
@@ -195,7 +193,7 @@ export function OrderProductCatalog({
             onPageChange={setPage}
             pageSizeOptions={[10, 25, 50, 100]}
             className="order-composer-catalog-table h-auto shadow-none"
-            tableClassName="table-fixed [&_th]:h-11 [&_td]:py-2 [&_td]:text-sm"
+            tableClassName="table-fixed"
             emptyContent={
               <p className="px-3 py-6 text-center text-ui text-muted-foreground">
                 {search ? 'No products match your search.' : 'No active products available.'}

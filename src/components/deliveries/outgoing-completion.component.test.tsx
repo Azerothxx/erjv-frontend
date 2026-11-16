@@ -1,3 +1,4 @@
+import { noLastEditor } from '@/test/last-edited'
 import { DeliveriesHub } from './DeliveriesHub'
 import { openDeliveryRecord } from '@/test/delivery-record'
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
@@ -85,7 +86,7 @@ beforeEach(() => {
   gate = undefined
   unconfirmed = false
   missingProduct = false
-  delivery = {
+  delivery = { ...noLastEditor,
     id: 90,
     deliveryNumber: 'OD-90',
     salesOrderId: 7,
@@ -125,7 +126,7 @@ beforeEach(() => {
       },
     ],
   }
-  run = {
+  run = { ...noLastEditor,
     id: 40,
     runNumber: 'RUN-40',
     revision: 2,

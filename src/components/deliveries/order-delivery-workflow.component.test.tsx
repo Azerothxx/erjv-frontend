@@ -1,3 +1,4 @@
+import { noLastEditor } from '@/test/last-edited'
 import { openDeliveryRecord, startDeliveryAction } from '@/test/delivery-record'
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -57,7 +58,7 @@ const orderDates = {
   notes: null,
   ...stamps,
 }
-const salesFixture: SalesOrderRecord = {
+const salesFixture: SalesOrderRecord = { ...noLastEditor,
   id: 1,
   revision: 1,
   orderNumber: 'SO-TEST',
@@ -73,7 +74,7 @@ const salesFixture: SalesOrderRecord = {
     },
   ],
 }
-const purchaseFixture: PurchaseOrderRecord = {
+const purchaseFixture: PurchaseOrderRecord = { ...noLastEditor,
   id: 2,
   revision: 1,
   orderNumber: 'PO-TEST',
@@ -85,7 +86,7 @@ const purchaseFixture: PurchaseOrderRecord = {
 const incomingFixture = (
   id: number,
   status: IncomingDeliveryRecord['status'],
-): IncomingDeliveryRecord => ({
+): IncomingDeliveryRecord => ({ ...noLastEditor,
   id,
   revision: 1,
   deliveryNumber: `IN-${id}`,
@@ -112,7 +113,7 @@ const incomingFixture = (
 const outgoingFixture = (
   id: number,
   status: OutgoingDeliveryRecord['status'],
-): OutgoingDeliveryRecord => ({
+): OutgoingDeliveryRecord => ({ ...noLastEditor,
   id,
   deliveryNumber: `OUT-${id}`,
   salesOrderId: 1,

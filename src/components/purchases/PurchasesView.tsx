@@ -406,7 +406,7 @@ export function PurchasesView({
       id: 'number',
       header: 'Order',
       width: '18%',
-      className: '!px-0',
+      identifier: true,
       cell: ({ row }) => (
         <OverflowValue
           value={row.po.orderNumber}
@@ -418,6 +418,7 @@ export function PurchasesView({
       id: 'supplier',
       header: 'Supplier',
       width: '24%',
+      className: 'font-medium',
       cell: ({ row }) => (
         <OverflowValue
           value={row.supplierName}
@@ -479,8 +480,8 @@ export function PurchasesView({
       width: '12%',
       sortable: false,
       sortKey: 'code',
-      className: 'text-sm font-medium text-foreground',
-      cell: ({ row: supplier }) => <>{supplier.code}</>,
+      identifier: true,
+      cell: ({ row: supplier }) => <OverflowValue value={supplier.code} />,
     },
     {
       id: 'supplier-1',

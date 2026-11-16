@@ -122,7 +122,8 @@ export function OverflowValue({
             onActivate()
           }}
           aria-label={fullText}
-          className={textClass}
+          // Inline link geometry: the text keeps its container's inset (e.g. the 16px table cell).
+          className={cn('h-auto justify-start p-0 text-left', textClass)}
           {...common}
         >
           {text}

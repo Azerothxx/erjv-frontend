@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react'
-import type { ReactNode } from 'react'
+import type { KeyboardEvent, ReactNode } from 'react'
+import { statusTabId, statusTabPanelId } from './status-tab-ids'
 
 export type StatusTabAccent = 'green' | 'blue' | 'red' | 'amber' | 'primary'
 
@@ -16,9 +17,30 @@ type StatusTabNavProps = {
   activeTab: string
   onTabChange: (tab: string) => void
   className?: string
+  /**
+   * `toggle` (default): pressed filter buttons. `tabs`: an ARIA tablist that switches
+   * content panels, with arrow/Home/End keys. The caller renders each panel as
+   * `role="tabpanel"` with `id={statusTabPanelId(idPrefix, value)}` and
+   * `aria-labelledby={statusTabId(idPrefix, value)}`.
+   */
+  semantics?: 'toggle' | 'tabs'
+  /** Accessible name of the tab list (tabs semantics). */
+  ariaLabel?: string
+  /** Prefix for tab and panel IDs (tabs semantics). */
+  idPrefix?: string
 }
 
-export function StatusTabNav({ tabs, activeTab, onTabChange, className = '' }: StatusTabNavProps) {
+
+export function StatusTabNav({
+  tabs,
+  activeTab,
+  onTabChange,
+  className = '',
+  semantics = 'toggle',
+  ariaLabel,
+  idPrefix = 'status-tab',
+}: StatusTabNavProps) {
+  const isTabs = semantics === 'tabs'
   const tabListRef = useRef<HTMLDivElement>(null)
   const tabButtonRefs = useRef(new Map<string, HTMLButtonElement>())
   const [indicator, setIndicator] = useState<{ left: number; width: number } | null>(null)
@@ -51,10 +73,36 @@ export function StatusTabNav({ tabs, activeTab, onTabChange, className = '' }: S
     return () => observer.disconnect()
   }, [activeTab, tabs])
 
+  const moveFocus = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    if (!isTabs) return
+    const last = tabs.length - 1
+    const next =
+      event.key === 'ArrowRight'
+        ? index === last
+          ? 0
+          : index + 1
+        : event.key === 'ArrowLeft'
+          ? index === 0
+            ? last
+            : index - 1
+          : event.key === 'Home'
+            ? 0
+            : event.key === 'End'
+              ? last
+              : null
+    if (next === null) return
+    event.preventDefault()
+    const value = tabs[next].value
+    tabButtonRefs.current.get(value)?.focus()
+    onTabChange(value)
+  }
+
   return (
     <div className={`flex min-w-0 items-center overflow-x-auto ${className}`}>
       <div
         ref={tabListRef}
+        role={isTabs ? 'tablist' : undefined}
+        aria-label={isTabs ? ariaLabel : undefined}
         className="relative inline-flex min-w-max items-center gap-1 rounded-lg bg-secondary p-1"
       >
         {indicator && (
@@ -64,7 +112,7 @@ export function StatusTabNav({ tabs, activeTab, onTabChange, className = '' }: S
             style={{ width: indicator.width, transform: `translateX(${indicator.left}px)` }}
           />
         )}
-        {tabs.map((tab) => {
+        {tabs.map((tab, index) => {
           const isSelected = tab.value === activeTab
 
           return (
@@ -75,9 +123,18 @@ export function StatusTabNav({ tabs, activeTab, onTabChange, className = '' }: S
                 else tabButtonRefs.current.delete(tab.value)
               }}
               type="button"
-              aria-pressed={isSelected}
+              {...(isTabs
+                ? {
+                    role: 'tab',
+                    id: statusTabId(idPrefix, tab.value),
+                    'aria-selected': isSelected,
+                    'aria-controls': statusTabPanelId(idPrefix, tab.value),
+                    tabIndex: isSelected ? 0 : -1,
+                  }
+                : { 'aria-pressed': isSelected })}
               data-state={isSelected ? 'active' : 'inactive'}
               onClick={() => onTabChange(tab.value)}
+              onKeyDown={(event) => moveFocus(event, index)}
               className="navigation-tab group relative z-10 flex min-h-9 cursor-pointer select-none items-center gap-2 rounded-md px-3 py-2 text-ui transition-colors duration-150 pointer-coarse:min-h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {tab.icon}

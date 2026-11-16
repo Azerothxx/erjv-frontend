@@ -1,3 +1,4 @@
+import { noLastEditor } from '@/test/last-edited'
 import { openDeliveryRecord, startDeliveryAction } from '@/test/delivery-record'
 import { toast } from '@/lib/notifications'
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
@@ -34,7 +35,7 @@ beforeEach(() => {
   activeWarehouse = true
   warehouseFails = false
   orderGate = undefined
-  order = {
+  order = { ...noLastEditor,
     id: 2,
     revision: 1,
     orderNumber: 'PO-000002',
@@ -51,7 +52,7 @@ beforeEach(() => {
     createdAt: '',
     updatedAt: '',
   }
-  draft = {
+  draft = { ...noLastEditor,
     id: 66,
     revision: 1,
     deliveryNumber: 'ID-000066',

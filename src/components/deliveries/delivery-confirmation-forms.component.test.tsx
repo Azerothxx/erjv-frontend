@@ -1,3 +1,4 @@
+import { noLastEditor } from '@/test/last-edited'
 import { within, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -49,7 +50,7 @@ beforeEach(() => {
   receiptAuth.isManager = false
   writes = []
   fail = false
-  run = {
+  run = { ...noLastEditor,
     id: 40,
     runNumber: 'RUN-40',
     revision: 2,

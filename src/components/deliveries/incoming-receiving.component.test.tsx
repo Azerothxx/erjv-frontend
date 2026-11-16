@@ -1,3 +1,4 @@
+import { noLastEditor } from '@/test/last-edited'
 import { startDeliveryAction } from '@/test/delivery-record'
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -77,7 +78,7 @@ beforeEach(() => {
   auth.isAdmin = true
   auth.isManager = false
   auth.isStaff = false
-  delivery = {
+  delivery = { ...noLastEditor,
     id: 90,
     revision: 1,
     deliveryNumber: 'IN-90',

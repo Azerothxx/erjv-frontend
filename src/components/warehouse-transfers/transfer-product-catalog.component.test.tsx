@@ -1,3 +1,4 @@
+import { noLastEditor } from '@/test/last-edited'
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -34,7 +35,7 @@ const stock = (id: number, warehouseId = 1, availableQuantity = '109.75') => ({
   quarantinedQuantity: '50',
   inventoryItem: products.find((product) => product.id === id),
 })
-const overstockedDraft: WarehouseTransfer = {
+const overstockedDraft: WarehouseTransfer = { ...noLastEditor,
   id: 7,
   transferNumber: 'WT-000007',
   revision: 1,

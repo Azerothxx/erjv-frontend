@@ -1,3 +1,4 @@
+import { noLastEditor } from '@/test/last-edited'
 import { act, fireEvent, render, renderHook, screen, waitFor, within } from '@testing-library/react'
 import { getAdapter } from 'axios'
 import userEvent from '@testing-library/user-event'
@@ -23,7 +24,7 @@ let gate: Promise<void> | undefined
 let ignoreStatuses: boolean
 const writes = () => requests.filter((request) => request.method !== 'get')
 function trip(id: number, status: DeliveryRunStatus): DeliveryRunRecord {
-  return { id, runNumber: `TRIP-${id}`, revision: 4, status, warehouseId: 2, driverEmployeeId: status === 'CANCELLED' ? null : 3,
+  return { ...noLastEditor, id, runNumber: `TRIP-${id}`, revision: 4, status, warehouseId: 2, driverEmployeeId: status === 'CANCELLED' ? null : 3,
     deliveryVehicleId: status === 'CANCELLED' ? null : 4, scheduledDepartureAt: '2026-11-01T00:00:00Z',
     dispatchedAt: status === 'COMPLETED' || status === 'DISPATCHED' ? '2026-11-02T01:00:00Z' : null,
     completedAt: status === 'COMPLETED' ? '2026-11-03T00:00:00Z' : null, cancelledAt: status === 'CANCELLED' ? '2026-11-01T01:00:00Z' : null,
@@ -32,7 +33,7 @@ function trip(id: number, status: DeliveryRunStatus): DeliveryRunRecord {
       status: status === 'COMPLETED' ? 'RECONCILED' : status === 'DRAFT' ? 'READY' : 'DISPATCHED', salesOrderId: deliveryId + 80, warehouseId: 2 })) }
 }
 function delivery(id: number): OutgoingDeliveryRecord {
-  return { id, deliveryNumber: `OD-${id}`, revision: 5, status: 'RECONCILED', warehouseId: 2, salesOrderId: id + 80, runId: 31,
+  return { ...noLastEditor, id, deliveryNumber: `OD-${id}`, revision: 5, status: 'RECONCILED', warehouseId: 2, salesOrderId: id + 80, runId: 31,
     reconciledAt: '2026-11-03T00:00:00Z', reconciledByUserId: null, fulfillmentOutcome: 'PARTIAL', hasDamage: true, hasMissing: true,
     notes: null, cancelledAt: null, plannedItems: [], ...stamps,
     items: [{ id: id * 100, outgoingDeliveryId: id, salesOrderItemId: id * 10, stockItemId: 55, quantity: '10.00', loadedQuantity: '10.00',

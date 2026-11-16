@@ -1,3 +1,4 @@
+import { noLastEditor } from '@/test/last-edited'
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
@@ -375,7 +376,7 @@ describe('purchase composer', () => {
   it('updates an existing purchase draft while preserving its saved line terms', async () => {
     const user = userEvent.setup()
     const onClose = vi.fn()
-    const draftOrder: PurchaseOrderRecord = {
+    const draftOrder: PurchaseOrderRecord = { ...noLastEditor,
       id: 7,
       revision: 1,
       orderNumber: 'PO-DRAFT-7',

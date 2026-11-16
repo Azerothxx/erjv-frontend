@@ -353,13 +353,21 @@ input[type='radio'] {
   padding-block: 0.5rem;
   font-variant-numeric: tabular-nums;
 }
+/* Compact read-only record tables: same inset and type, shorter header and rows. */
+.management-table.data-table-compact th {
+  height: 2.25rem;
+}
+.management-table.data-table-compact tbody > tr:not(:has(td[colspan])) {
+  height: auto;
+}
 .management-table button:focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
 }
 
 /* Inline expanded previews own their spacing instead of inheriting management-table density. */
-.management-table td:has(> .data-table-expanded-section) {
+.management-table td:has(> .data-table-expanded-section),
+.management-table td.data-table-expanded-cell {
   padding: 0;
 }
 .data-table-expanded-section {

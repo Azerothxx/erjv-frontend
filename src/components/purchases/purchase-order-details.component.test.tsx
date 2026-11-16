@@ -1,3 +1,4 @@
+import { noLastEditor } from '@/test/last-edited'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { expect, it, vi } from 'vitest'
@@ -6,7 +7,7 @@ import type { PurchaseOrderRecord } from '@/features/logistics/purchase-orders.t
 import type { IncomingDeliveryRecord } from '@/features/logistics/incoming-deliveries.types'
 import type { InventoryItemResponse } from '@/features/products/products.types'
 const stamp = '2026-11-11T00:00:00Z'
-const order: PurchaseOrderRecord = {
+const order: PurchaseOrderRecord = { ...noLastEditor,
   id: 1,
   revision: 3,
   orderNumber: 'PO-1',
@@ -50,7 +51,7 @@ function receipt(
   accepted = '3',
   damaged = '2',
 ): IncomingDeliveryRecord {
-  return {
+  return { ...noLastEditor,
     id,
     revision: 1,
     deliveryNumber: 'IN-' + id,

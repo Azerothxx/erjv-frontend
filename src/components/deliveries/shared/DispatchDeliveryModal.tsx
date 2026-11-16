@@ -112,7 +112,7 @@ export function DispatchDeliveryModal({
                 pagination={false}
                 getRowKey={(row) => row.key}
                 columns={[
-                  { id: 'delivery', header: 'Delivery', cell: ({ row }) => row.deliveryNumber },
+                  { id: 'delivery', header: 'Delivery', identifier: true, cell: ({ row }) => row.deliveryNumber },
                   {
                     id: 'product',
                     header: 'Product',

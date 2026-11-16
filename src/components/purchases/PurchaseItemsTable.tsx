@@ -96,8 +96,6 @@ export function PurchaseItemsTable(props: Props) {
       id: 'actions',
       header: <span className="sr-only">Actions</span>,
       width: 48,
-      className: 'px-1',
-      headerClassName: 'px-1',
       cell: ({ row }) => (
         <Button
           type="button"

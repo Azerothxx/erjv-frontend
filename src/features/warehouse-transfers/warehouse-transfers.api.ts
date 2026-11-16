@@ -1,6 +1,7 @@
 import { apiClient, requireRevision } from '@/lib/api-client'
 import { parseOrderDecimal } from '@/lib/order-amounts'
 import { decimalLimitError, requireDecimalLimit } from '@/lib/decimal-limits'
+import { withoutLastEdited } from '@/lib/last-edited'
 import {
   outcomeFields,
   type TransferCommand,
@@ -61,7 +62,8 @@ export async function fetchTransfer(id: number, signal?: AbortSignal) {
 }
 
 export async function writeTransfer(command: TransferCommand) {
-  const payload = command.payload
+  // Attribution is response-only; strict backend validation rejects it in bodies.
+  const payload = withoutLastEdited(command.payload)
   if (command.action !== 'create') {
     requireRevision(command.id)
     requireRevision(command.payload.expectedRevision)

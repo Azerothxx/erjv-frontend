@@ -1,3 +1,4 @@
+import { LastEditedBy } from '@/components/common/LastEditedBy'
 import { useRef, useState } from 'react'
 import { IncomingIssueCorrection } from '../IncomingIssueCorrection'
 import { DeliveryDetailFooter } from './DeliveryDetailFooter'
@@ -188,6 +189,7 @@ export function IncomingDeliveryDetailModal({
           ...(delivery.supplierReference
             ? [{ label: 'Supplier reference', value: delivery.supplierReference }]
             : []),
+          { label: 'Last edited', value: <LastEditedBy record={delivery} /> },
         ]
       : []
   return (

@@ -1,3 +1,4 @@
+import { LastEditedBy } from '@/components/common/LastEditedBy'
 import { ProductTableLabel, ProductTableQuantity } from '@/components/common/ProductTableCells'
 import {
   DataTableFilters,
@@ -138,13 +139,13 @@ export function WarehouseTransfersPage({ view = 'active' }: { view?: 'active' | 
     {
       header: 'Transfer #',
       accessorKey: 'transferNumber',
+      identifier: true,
       width: '17%',
       cell: ({ row }) => (
         <OverflowValue asChild value={row.transferNumber}>
           <Button
             variant="link"
-            size="sm"
-            className="max-w-full px-0"
+            className="block h-auto min-w-0 max-w-full truncate p-0 text-left"
             aria-label={'View transfer ' + row.transferNumber}
             onClick={() => openDetails(row)}
           >
@@ -559,6 +560,7 @@ export function TransferDialog({
                               : 'Not recorded',
                           }]
                         : []),
+                      { label: 'Last edited', value: <LastEditedBy record={record} /> },
                     ]}
                   />
                 </section>

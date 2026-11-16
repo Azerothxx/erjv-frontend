@@ -50,6 +50,7 @@ export function DeliveryTable({
       header: 'Delivery #',
       accessorKey: 'reference',
       sortable: false,
+      identifier: true,
       cell: ({ row }) => (
         <div
           className={
@@ -61,33 +62,25 @@ export function DeliveryTable({
           <OverflowValue value={row.reference} asChild>
             <Button
               variant="link"
-              className={
-                view === 'incoming'
-                  ? 'h-auto min-h-8 max-w-44 justify-start p-0 text-left text-sm font-semibold text-foreground pointer-coarse:min-h-11'
-                  : 'h-auto min-h-8 justify-start whitespace-normal break-words p-0 text-left text-sm font-medium pointer-coarse:min-h-11'
-              }
+              className="h-auto min-h-8 max-w-44 justify-start p-0 text-left pointer-coarse:min-h-11"
               onClick={() => onView(row)}
               aria-label={`View delivery ${row.reference}`}
             >
-              {view === 'incoming' ? (
-                <span data-overflow-text className="truncate">
-                  {row.reference}
-                </span>
-              ) : (
-                row.reference
-              )}
+              <span data-overflow-text className="truncate">
+                {row.reference}
+              </span>
             </Button>
           </OverflowValue>
           <span
             className={
-              view === 'incoming' ? 'hidden' : 'block text-xs text-muted-foreground sm:hidden'
+              view === 'incoming' ? 'hidden' : 'block text-xs font-normal text-muted-foreground sm:hidden'
             }
           >
             {row.party} · {row.relatedOrder}
           </span>
           <span
             className={
-              view === 'incoming' ? 'hidden' : 'block text-xs text-muted-foreground sm:hidden'
+              view === 'incoming' ? 'hidden' : 'block text-xs font-normal text-muted-foreground sm:hidden'
             }
           >
             {row.type === 'Outgoing'

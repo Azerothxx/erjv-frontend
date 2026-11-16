@@ -1,3 +1,4 @@
+import type { LastEditedAttribution } from '@/lib/last-edited'
 import type { CursorParams } from '@/lib/cursor-pagination'
 import type { OutgoingDeliveryRecord, OutgoingDeliveryStatus } from './outgoing-deliveries.types'
 import type { TransferStatus } from '@/features/warehouse-transfers/warehouse-transfers.types'
@@ -25,7 +26,7 @@ export interface DeliveryRunMember {
   salesOrderId: number
   warehouseId: number | null
 }
-export interface DeliveryRunRecord {
+export interface DeliveryRunRecord extends LastEditedAttribution {
   id: number
   runNumber: string
   revision: number

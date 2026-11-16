@@ -18,7 +18,7 @@ import { fetchClientByIdApi } from '@/features/crm/clients.api'
 import { DataTableFooter, DataTableFrame } from '@/components/ui/DataTableFooter'
 import { PageHeader, PageToolbar } from '@/components/ui/ManagementPage'
 import { useState, useMemo } from 'react'
-import { CheckCircle2, Plus, Search, XCircle } from 'lucide-react'
+import { CheckCircle2, Clock, Plus, Search, XCircle } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -327,7 +327,7 @@ export function OrdersView({
       id: 'order',
       header: 'Order',
       width: '18%',
-      className: '!px-0',
+      identifier: true,
       cell: ({ row }) => (
         <OverflowValue
           value={row.order.orderNumber}
@@ -339,6 +339,7 @@ export function OrdersView({
       id: 'customer',
       header: 'Customer',
       width: '24%',
+      className: 'font-medium',
       cell: ({ row }) => (
         <OverflowValue
           value={row.client?.name || 'Customer #' + row.order.clientId}
@@ -414,7 +415,7 @@ export function OrdersView({
           {
             value: 'Active',
             label: 'Active Orders',
-            icon: <CheckCircle2 className="size-3.5" />,
+            icon: <Clock className="size-3.5" />,
             accent: 'green',
           },
           {

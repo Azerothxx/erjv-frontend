@@ -1,3 +1,4 @@
+import { noLastEditor } from '@/test/last-edited'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -11,7 +12,7 @@ vi.mock('@/features/auth/AuthContext', () => ({
   useAuth: () => ({ isAdmin: true, isManager: false }),
 }))
 const stamp = '2026-11-11T00:00:00Z'
-const order: SalesOrderRecord = {
+const order: SalesOrderRecord = { ...noLastEditor,
   id: 1,
   revision: 3,
   orderNumber: 'SO-1',

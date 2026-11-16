@@ -1,3 +1,4 @@
+import { noLastEditor } from '@/test/last-edited'
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -21,7 +22,7 @@ beforeEach(() => {
   auth.isAdmin = true
   auth.isStaff = false
   transfer = { ...transferFixture(), runId: null }
-  run = {
+  run = { ...noLastEditor,
     id: 40,
     runNumber: 'RUN-40',
     revision: 2,

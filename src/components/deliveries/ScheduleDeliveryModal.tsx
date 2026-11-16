@@ -136,7 +136,7 @@ function OutgoingPlanningForm({
       cell: ({ row }) => {
         const product = form.products.find((product) => product.id === row.inventoryItemId)
         return (
-          <div className="min-w-32 text-[13px]">
+          <div className="min-w-32">
             <p className="font-medium">{product?.name || `Product #${row.inventoryItemId}`}</p>
             <p className="text-xs text-muted-foreground">
               {[product?.variety, product?.unit].filter(Boolean).join(' · ')}

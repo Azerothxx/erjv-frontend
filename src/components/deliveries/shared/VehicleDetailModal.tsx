@@ -125,6 +125,7 @@ export function VehicleDetailModal({
                   id: 'reference',
                   header: 'Reference',
                   accessorKey: 'runNumber',
+                  identifier: true,
                   sortable: false,
                 },
                 {

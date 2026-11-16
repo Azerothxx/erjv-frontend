@@ -1,5 +1,6 @@
 import { requireDecimalLimit } from '@/lib/decimal-limits'
 import { apiClient, requireRevision } from '@/lib/api-client'
+import { withoutLastEdited } from '@/lib/last-edited'
 import { fetchCursorList } from '@/lib/cursor-pagination'
 import { parseStockCents } from './stock-display'
 import type {
@@ -79,7 +80,7 @@ export async function updateIncomingDraftApi(
   const { data } = await apiClient.patch<IncomingDeliveryRecord>(
     `/incoming-deliveries/${id}/draft`,
     {
-      ...payload,
+      ...withoutLastEdited(payload),
       expectedRevision: requireRevision(payload.expectedRevision),
     },
   )
