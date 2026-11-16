@@ -327,7 +327,7 @@ export function OrdersView({
       id: 'order',
       header: 'Order',
       width: '18%',
-      className: '!px-0',
+      identifier: true,
       cell: ({ row }) => (
         <OverflowValue
           value={row.order.orderNumber}

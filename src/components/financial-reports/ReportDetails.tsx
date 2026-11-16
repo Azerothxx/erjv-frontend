@@ -268,6 +268,7 @@ function ReportBreakdown({
       header: groupLabel(groupBy),
       accessorFn: rowLabel,
       sortable: false,
+      className: 'font-medium',
     },
     ...(profit ? ['estimatedGrossProfitAmount'] : ['totalAmount']).map((key) => ({
       id: key,

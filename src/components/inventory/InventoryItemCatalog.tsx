@@ -264,7 +264,7 @@ export function InventoryItemCatalog({
 
   // Column definitions for the reusable DataTable component
   const stockRowClassName = (product: InventoryItemResponse) => {
-    if (product.isActive === false) return 'opacity-75 bg-background'
+    if (product.isActive === false) return 'bg-muted/10 opacity-75'
     const warning = stockWarningForProduct(product)
     if (warning === 'OUT') return 'bg-destructive/5 hover:bg-destructive/10 focus-within:bg-destructive/10'
     if (warning === 'LOW') return 'bg-status-warning/50 hover:bg-status-warning focus-within:bg-status-warning'

@@ -360,11 +360,12 @@ export function DeliveryRunsHub({ history = false }: { history?: boolean }) {
     {
       id: 'run',
       header: history ? 'Trip Number' : 'Trip',
+      identifier: true,
       cell: ({ row }) => (
         <OverflowValue asChild value={row.runNumber} fullValue={`${row.runNumber}: ${preparation(row)}`} showFullValueOnHover>
           <Button
             variant="link"
-            className="h-auto whitespace-normal break-words px-0 text-left"
+            className="block h-auto min-w-0 max-w-full truncate p-0 text-left"
             onClick={() => select(row.id)}
           >
             {row.runNumber}
@@ -1044,6 +1045,7 @@ function RunDetails({ id, onClose, onDeparted, readOnly = false }: { id: number;
     {
       header: 'Delivery',
       accessorKey: 'deliveryNumber',
+      identifier: true,
       cell: ({ row }) => <div className="flex items-center gap-2">
         {unfinished.length > 1 && row.status === 'DISPATCHED' && <input type="radio" name="trip-result-delivery"
           aria-label={`Select ${row.deliveryNumber} for results`} aria-describedby="trip-results-selection"
@@ -1192,7 +1194,7 @@ function RunDetails({ id, onClose, onDeparted, readOnly = false }: { id: number;
               {!!run.warehouseTransfers?.length && <section aria-label="Warehouse Transfers in This Trip" className="flex flex-col gap-3">
                 <h2 className="font-semibold">Warehouse Transfers in This Trip</h2>
                 <DataTable data={run.warehouseTransfers} pagination={false} getRowKey={(member) => member.id} columns={[
-                  { header: 'Transfer', accessorKey: 'transferNumber' },
+                  { header: 'Transfer', accessorKey: 'transferNumber', identifier: true },
                   { header: 'Status', cell: ({ row }) => row.status === 'DISPATCHED' ? 'In Transit · Receipt not recorded' : row.status === 'COMPLETED' ? 'Receipt recorded' : row.status === 'DRAFT' ? 'Assigned · Awaiting departure' : 'Cancelled' },
                   { header: 'Actions', cell: ({ row }) => <div className="flex gap-2">
                     <Button variant="outline" size="sm" onClick={() => setViewTransferId(row.id)}>View Transfer</Button>

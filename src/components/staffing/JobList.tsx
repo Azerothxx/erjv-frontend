@@ -138,7 +138,7 @@ export function JobList() {
       accessorKey: 'description',
       sortable: false,
       sortKey: (job) => job.description || '',
-      className: 'min-w-64 max-w-xl text-muted-foreground',
+      className: 'min-w-64 max-w-xl text-foreground',
       cell: ({ row }) => (
         <OverflowValue value={row.description || 'No description specified.'} className="max-w-xl" />
       ),

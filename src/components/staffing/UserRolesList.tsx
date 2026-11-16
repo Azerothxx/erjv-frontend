@@ -513,7 +513,7 @@ export function UserRolesList() {
             pageSize={10}
             pageSizeOptions={[10, 25, 50, 100]}
             tableClassName="min-w-[980px]"
-            rowClassName={(row) => (row.isActive === false ? 'bg-muted/10 opacity-80' : '')}
+            rowClassName={(row) => (row.isActive === false ? 'bg-muted/10 opacity-75' : '')}
           />
         )}
       <DataTableFooter {...usersQuery} rowCount={usersQuery.items.length} label="User" />

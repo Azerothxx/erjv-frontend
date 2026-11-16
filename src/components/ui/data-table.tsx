@@ -19,6 +19,17 @@ export type SortDirection = 'asc' | 'desc'
 
 const SKELETON_CELL_WIDTH_CLASSES = ['w-3/4', 'w-1/2', 'w-2/3', 'w-3/5', 'w-4/5']
 
+/**
+ * One table geometry for every DataTable: `management-table` (index.css) owns header
+ * height, row height, vertical cell padding, line height and tabular numbers; every
+ * header and cell shares a 16px horizontal inset.
+ */
+const TABLE_FRAME =
+  'ui-typography management-table rounded-lg border border-border overflow-hidden bg-card shadow-none flex flex-col'
+const TABLE_CELL_INSET = '[&_td]:px-4 [&_th]:px-4'
+/** Shared record identifier look, matching the Purchase/Sales Order number links. */
+const IDENTIFIER_CELL = 'text-ui font-medium text-primary'
+
 export interface SortConfig {
   key: string
   direction: SortDirection
@@ -66,6 +77,14 @@ export interface ColumnDef<T, V = unknown> {
 
   /** Additional custom classNames for the table header */
   headerClassName?: string
+
+  /**
+   * Record identifier column (e.g. PO-000042, DR-000003, #0012). Renders the shared
+   * identifier style: brand green, 13px, medium weight. Clickable identifiers render
+   * `<OverflowValue value={id} onActivate={...} />` (or an `h-auto p-0` link Button)
+   * so the text keeps the standard cell inset.
+   */
+  identifier?: boolean
 
   // --- Extensibility Hooks ---
   /** Whether the column can be clicked to sort */
@@ -149,9 +168,12 @@ export interface DataTableProps<T> {
   manualPagination?: boolean
 
   // --- Container & Table Styling ---
-  /** Opt-in lighter separators, roomier cells and clearer neutral row hover. */
+  /**
+   * Retained for call-site compatibility. All appearances share one geometry, typography
+   * and row treatment so tables look identical across pages.
+   */
   appearance?: 'default' | 'subtle' | 'management'
-  /** Read-only record tables: compact padding without constraining content or controls. */
+  /** Read-only record tables: shorter header and rows; same cell inset and typography. */
   density?: 'default' | 'compact'
   className?: string
   tableClassName?: string
@@ -282,6 +304,7 @@ export function DataTable<T>({
       resolvedId: getColumnId(col, index),
     }))
   }, [columns])
+  const frameClassName = cn(TABLE_FRAME, density === 'compact' && 'data-table-compact')
   const resolvedTableClassName = cn(
     tableClassName,
     standardizeCells &&
@@ -408,23 +431,11 @@ export function DataTable<T>({
     return (
       <div
         role="status"
-        className={cn(
-          'ui-typography rounded-lg border border-border overflow-hidden bg-card flex flex-col',
-          appearance === 'management' && 'management-table shadow-none',
-          density === 'compact' && '[&_thead_th]:h-9 [&_thead_th]:px-3 [&_tbody_td]:px-3 [&_tbody_td]:py-2.5',
-          className,
-        )}
+        className={cn(frameClassName, className)}
       >
         <span className="sr-only">{loadingMessage}</span>
         <div aria-hidden="true" className="overflow-x-auto">
-          <Table
-            className={cn(
-              appearance === 'management'
-                ? '[&_td]:px-4 [&_th]:px-4'
-                : '[&_td]:px-2 [&_th]:px-2 [&_td:first-child]:pl-3 [&_th:first-child]:pl-3 [&_td:last-child]:pr-3 [&_th:last-child]:pr-3',
-              resolvedTableClassName,
-            )}
-          >
+          <Table className={cn(TABLE_CELL_INSET, resolvedTableClassName)}>
             <TableHeader className="bg-secondary">
               <TableRow className="hover:bg-transparent">
                 {resolvedColumns.map((column) => {
@@ -503,19 +514,12 @@ export function DataTable<T>({
   return (
     <div
       aria-busy={isLoading || undefined}
-      className={cn(
-        'ui-typography rounded-lg border border-border overflow-hidden bg-card flex flex-col',
-        appearance === 'management' && 'management-table shadow-none',
-        density === 'compact' && '[&_thead_th]:h-9 [&_thead_th]:px-3 [&_tbody_td]:px-3 [&_tbody_td]:py-2.5',
-        className,
-      )}
+      className={cn(frameClassName, className)}
     >
       <div className="overflow-x-auto">
         <Table
           className={cn(
-            appearance === 'management'
-              ? '[&_td]:px-4 [&_th]:px-4'
-              : '[&_td]:px-2 [&_th]:px-2 [&_td:first-child]:pl-3 [&_th:first-child]:pl-3 [&_td:last-child]:pr-3 [&_th:last-child]:pr-3',
+            TABLE_CELL_INSET,
             // Keep controls compact even when feature renderers supply custom typography.
             '[&_tbody_td_button]:text-ui [&_tbody_td_button]:font-medium [&_tbody_td_button]:leading-4 [&_tbody_[data-slot=badge]]:text-xs [&_tbody_[data-slot=badge]]:font-medium [&_tbody_[data-slot=badge]]:leading-4 [&_tbody_[data-slot=badge]]:px-2 [&_tbody_[data-slot=badge]]:py-0.5 [&_tbody_[data-slot=badge]]:rounded-md [&_tbody_[data-slot=badge]]:gap-1.5',
             resolvedTableClassName,
@@ -551,7 +555,6 @@ export function DataTable<T>({
                     style={widthStyle}
                     className={cn(
                       'text-xs font-medium text-muted-foreground select-none',
-                      appearance === 'subtle' && 'text-muted-foreground',
                       alignClass,
                       column.headerClassName,
                     )}
@@ -641,13 +644,11 @@ export function DataTable<T>({
                       }
                       className={cn(
                         'hover:bg-accent/70 focus-within:bg-accent/70 transition-colors duration-150',
-                        // The unlayered global border rule otherwise overrides Tailwind colors.
-                        appearance === 'subtle' && 'border-border/60! hover:bg-muted/40',
                         onRowClick && 'cursor-pointer',
                         computedRowClass,
                       )}
                     >
-                      {resolvedColumns.map((column, columnIndex) => {
+                      {resolvedColumns.map((column) => {
                         const alignClass = getAlignmentClass(column.align)
                         const value = getCellValue(row, column)
                         const widthStyle =
@@ -666,10 +667,7 @@ export function DataTable<T>({
                             style={widthStyle}
                             className={cn(
                               'text-sm text-foreground',
-                              standardizeCells &&
-                                columnIndex === 0 &&
-                                'px-4 font-semibold text-primary',
-                              appearance === 'subtle' && 'py-4',
+                              column.identifier && IDENTIFIER_CELL,
                               alignClass,
                               column.className,
                             )}
@@ -687,7 +685,10 @@ export function DataTable<T>({
                     </TableRow>
                     {expandedContent && (
                       <TableRow className="bg-muted/20 hover:bg-muted/20">
-                        <TableCell colSpan={resolvedColumns.length} className="p-0 align-top">
+                        <TableCell
+                          colSpan={resolvedColumns.length}
+                          className="data-table-expanded-cell p-0 align-top"
+                        >
                           {expandedContent}
                         </TableCell>
                       </TableRow>

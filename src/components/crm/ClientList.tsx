@@ -63,7 +63,8 @@ export function ClientList() {
       header: 'Customer ID',
       accessorKey: 'id',
       width: 112,
-      className: 'min-w-28 tabular-nums text-muted-foreground customer-secondary',
+      identifier: true,
+      className: 'min-w-28',
       headerClassName: 'whitespace-nowrap',
       cell: ({ row }) => `#${String(row.id).padStart(4, '0')}`,
     },
@@ -93,7 +94,7 @@ export function ClientList() {
       id: 'customer-address',
       header: 'Address',
       accessorKey: 'address',
-      className: 'max-w-[240px] text-muted-foreground',
+      className: 'max-w-[240px] text-foreground',
       cell: ({ row }) => <OverflowValue value={row.address} />,
     },
     {

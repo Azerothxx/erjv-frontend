@@ -6,23 +6,66 @@ import { DataTable } from './data-table'
 import { OverflowValue } from './OverflowValue'
 
 describe('DataTable accessibility', () => {
-  it('uses the order identifier style and single-line scrolling by default', () => {
+  it('styles only identifier columns with the order identifier look', () => {
     render(
       <DataTable
-        appearance="management"
-        data={[{ id: 'SO-001' }]}
+        data={[{ id: 'SO-001', name: 'Rice' }]}
         pagination={false}
-        columns={[{ header: 'Order', accessorKey: 'id' }]}
+        columns={[
+          { header: 'Order', accessorKey: 'id', identifier: true },
+          { header: 'Product', accessorKey: 'name' },
+        ]}
       />,
     )
 
     const table = screen.getByRole('table')
-    const cell = screen.getByRole('cell')
+    const [idCell, nameCell] = screen.getAllByRole('cell')
     expect(table.className).toContain('min-w-max')
     expect(table.className).toContain('whitespace-nowrap')
-    expect(cell.className).toContain('font-semibold')
-    expect(cell.className).toContain('text-primary')
-    expect(cell.className).toContain('px-4')
+    expect(table.className).toContain('[&_td]:px-4')
+    expect(idCell.className).toContain('text-primary')
+    expect(idCell.className).toContain('font-medium')
+    expect(idCell.className).toContain('text-ui')
+    expect(nameCell.className).not.toContain('text-primary')
+    expect(nameCell.className).toContain('text-foreground')
+  })
+
+  it('does not give a non-identifier first column the identifier look', () => {
+    render(
+      <DataTable
+        data={[{ id: 1, name: 'Rice' }]}
+        pagination={false}
+        columns={[{ header: 'Product', accessorKey: 'name' }]}
+      />,
+    )
+
+    expect(screen.getByRole('cell').className).not.toContain('text-primary')
+  })
+
+  it('gives every appearance and density the same frame and cell inset', () => {
+    const { rerender } = render(
+      <DataTable
+        appearance="subtle"
+        density="compact"
+        data={[{ id: 1 }]}
+        pagination={false}
+        columns={[{ header: 'Id', accessorKey: 'id' }]}
+      />,
+    )
+    const frame = () => screen.getByRole('table').closest('.management-table')
+    expect(frame()).not.toBeNull()
+    expect(frame()?.className).toContain('data-table-compact')
+    expect(screen.getByRole('table').className).toContain('[&_th]:px-4')
+
+    rerender(
+      <DataTable
+        data={[{ id: 1 }]}
+        pagination={false}
+        columns={[{ header: 'Id', accessorKey: 'id' }]}
+      />,
+    )
+    expect(frame()).not.toBeNull()
+    expect(frame()?.className).not.toContain('data-table-compact')
   })
 
   it('allows the warehouse table to retain its custom wrapping and width', () => {

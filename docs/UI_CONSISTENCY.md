@@ -124,6 +124,21 @@ The Dashboard and Financial Reports are specialized overview/analysis screens, b
 
 Do not introduce a second tab styling system, duplicate cursor state management, or a new DataTable framework without a demonstrated need. Avoid rewriting unrelated pages to achieve simple visual consistency.
 
+**DataTable presentation (one look everywhere).**
+
+- **Geometry.** Every DataTable shares the `management-table` geometry:
+  - 16px horizontal cell and header inset
+  - 44px header and 48px minimum body rows (`density="compact"`: 36px header, natural row height)
+  - 8px vertical cell padding
+  - `text-sm` graphite cell text, `text-xs` medium muted headers, and the same row hover and borders
+- **`appearance`.** The prop no longer changes any of this.
+- **Identifier columns.** A column whose content is a record identifier (order, delivery, trip, transfer, supplier code, customer ID) sets `identifier: true`. That gives it the Purchase Order number look: brand green, 13px, medium weight.
+  - A clickable identifier uses `OverflowValue` with `onActivate`, or a `variant="link"` Button with `h-auto p-0`.
+  - It never sets its own color, weight, size or cell padding.
+- **Other columns.** A row's primary label is `font-medium text-foreground`. Secondary lines are `text-xs text-muted-foreground` at normal weight. Data values stay `text-foreground`.
+- **Inactive rows.** Archived or inactive rows use `bg-muted/10 opacity-75`.
+- **Overrides.** Column `className` and `tableClassName` are for width, alignment and wrapping, not padding or typography.
+
 ### 3.1 Forms, dialogs, and action footers
 
 - Reuse shared field controls with visible labels, explicit units and required indicators, and associated helper/error text. Preserve all domain validation. For quantity/price inputs, prefer compact widths around 100–140px where the value fits; allow growth for long values and small-screen readability. Do not stretch every numeric field across its container.

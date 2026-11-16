@@ -75,7 +75,7 @@ export function SupplierPricesModal({
     {
       accessorKey: 'inventoryItemId',
       header: 'Product',
-      className: 'whitespace-normal break-words',
+      className: 'whitespace-normal break-words font-medium',
       cell: ({ row }) =>
         products.find((product) => product.id === row.inventoryItemId)?.name ??
         `Product #${row.inventoryItemId}`,

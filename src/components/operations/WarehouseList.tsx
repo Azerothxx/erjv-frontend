@@ -173,7 +173,7 @@ export function WarehouseList({ onOpenWarehouse }: { onOpenWarehouse: (id: numbe
             <OverflowValue
               value={`${warehouseTotals.get(row.id)?.products ?? 0}${stockQuery.hasNextPage ? '+' : ''}`}
               tooltipSuffix="stock records"
-              className="max-w-[55%] font-semibold tabular-nums"
+              className="max-w-[55%] font-medium tabular-nums"
             />
           </div>
         </div>
