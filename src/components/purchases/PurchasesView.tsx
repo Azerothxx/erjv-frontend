@@ -418,6 +418,7 @@ export function PurchasesView({
       id: 'supplier',
       header: 'Supplier',
       width: '24%',
+      className: 'font-medium',
       cell: ({ row }) => (
         <OverflowValue
           value={row.supplierName}
