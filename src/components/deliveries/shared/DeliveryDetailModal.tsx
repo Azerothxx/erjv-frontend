@@ -1,3 +1,4 @@
+import { LastEditedBy } from '@/components/common/LastEditedBy'
 import { formatContactPhone } from '@/lib/phone-utils'
 import { useEffect, useRef, useState } from 'react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -270,6 +271,7 @@ export function DeliveryDetailModal({
               },
             ]
           : []),
+        { label: 'Last edited', value: <LastEditedBy record={delivery} /> },
       ]
     : []
 

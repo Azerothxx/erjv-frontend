@@ -1,3 +1,4 @@
+import { noLastEditor } from '@/test/last-edited'
 import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -17,7 +18,7 @@ import { IncomingDeliveryDetailModal } from './shared/IncomingDeliveryDetailModa
 import type { DeliveryDetailModalProps } from './shared/DeliveryDetailModal'
 
 const stamps = { createdAt: '2026-10-01T00:00:00Z', updatedAt: '2026-10-01T00:00:00Z' }
-const deliveryFixture: OutgoingDeliveryRecord = {
+const deliveryFixture: OutgoingDeliveryRecord = { ...noLastEditor,
   id: 10,
   deliveryNumber: 'OD-000010',
   salesOrderId: 11,
@@ -46,14 +47,14 @@ const deliveryFixture: OutgoingDeliveryRecord = {
     },
   ],
 }
-const runFixture: DeliveryRunRecord = {
+const runFixture: DeliveryRunRecord = { ...noLastEditor,
   id: 12, runNumber: 'RUN-000012', revision: 4, status: 'DISPATCHED', warehouseId: 3,
   deliveryVehicleId: 4, driverEmployeeId: 5, scheduledDepartureAt: '2026-10-02T02:30:00Z',
   dispatchedAt: '2026-10-03T03:45:00Z', completedAt: null, cancelledAt: null,
   departureConfirmedByUserId: 1, loadedWeightKg: '0.05', capacityKgAtDeparture: '1500.00', notes: null,
   ...stamps, deliveries: [{ id: 10, deliveryNumber: 'OD-000010', revision: 1, status: 'DISPATCHED', salesOrderId: 11, warehouseId: 3 }],
 }
-const orderFixture: SalesOrderRecord = {
+const orderFixture: SalesOrderRecord = { ...noLastEditor,
   id: 11,
   revision: 1,
   orderNumber: 'SO-000011',
@@ -289,6 +290,8 @@ describe('outgoing delivery details', () => {
     expect(within(dialog).getByText('Ana Cruz')).toBeTruthy()
     expect(within(dialog).getByText('+63 912 345 6789')).toBeTruthy()
     expect(within(dialog).getByText('ABC-1234 (Truck)')).toBeTruthy()
+    expect(within(dialog).getByText('Last edited')).toBeTruthy()
+    expect(within(dialog).getByText('Not edited yet')).toBeTruthy()
     expect(within(dialog).getByText('Cargo Model / Capacity: 1500.00 kg')).toBeTruthy()
     expect(
       within(dialog).getAllByText(DeliveryUtils.formatDateTime(runFixture.scheduledDepartureAt)),
@@ -444,7 +447,7 @@ describe('outgoing delivery details', () => {
   })
 })
 
-const incomingDeliveryFixture: IncomingDeliveryRecord = {
+const incomingDeliveryFixture: IncomingDeliveryRecord = { ...noLastEditor,
   id: 20,
   revision: 1,
   deliveryNumber: 'ID-000020',
@@ -471,7 +474,7 @@ const incomingDeliveryFixture: IncomingDeliveryRecord = {
   }],
 }
 
-const purchaseOrderFixture: PurchaseOrderRecord = {
+const purchaseOrderFixture: PurchaseOrderRecord = { ...noLastEditor,
   id: 21,
   revision: 1,
   orderNumber: 'PO-000021',

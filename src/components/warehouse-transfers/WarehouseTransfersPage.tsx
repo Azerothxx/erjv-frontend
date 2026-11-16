@@ -1,3 +1,4 @@
+import { LastEditedBy } from '@/components/common/LastEditedBy'
 import { ProductTableLabel, ProductTableQuantity } from '@/components/common/ProductTableCells'
 import {
   DataTableFilters,
@@ -559,6 +560,7 @@ export function TransferDialog({
                               : 'Not recorded',
                           }]
                         : []),
+                      { label: 'Last edited', value: <LastEditedBy record={record} /> },
                     ]}
                   />
                 </section>

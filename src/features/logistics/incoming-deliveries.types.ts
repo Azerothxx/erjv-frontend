@@ -1,3 +1,4 @@
+import type { LastEditedAttribution } from '@/lib/last-edited'
 import type { CursorParams } from '@/lib/cursor-pagination'
 
 export type IncomingDeliveryStatus = 'DRAFT' | 'SCHEDULED' | 'COMPLETED' | 'CANCELLED'
@@ -17,7 +18,7 @@ export interface IncomingDeliveryItemRecord {
   }
 }
 
-export interface IncomingDeliveryRecord {
+export interface IncomingDeliveryRecord extends LastEditedAttribution {
   id: number
   revision: number
   deliveryNumber: string

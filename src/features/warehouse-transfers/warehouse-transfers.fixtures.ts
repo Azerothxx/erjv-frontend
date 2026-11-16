@@ -1,6 +1,7 @@
+import { noLastEditor } from '@/test/last-edited'
 import type { WarehouseTransfer } from './warehouse-transfers.types'
 export function transferFixture(): WarehouseTransfer {
-  return {
+  return { ...noLastEditor,
     id: 7,
     revision: 1,
     transferNumber: 'WT-000007',

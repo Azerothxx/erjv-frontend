@@ -1,3 +1,4 @@
+import { noLastEditor } from '@/test/last-edited'
 import { act, fireEvent, render, renderHook, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -32,7 +33,7 @@ const products = [1, 2].map((id) => ({
   isActive: true,
   ...timestamps,
 }))
-const draft: SalesOrderRecord = {
+const draft: SalesOrderRecord = { ...noLastEditor,
   id: 42,
   revision: 3,
   orderNumber: 'SO-42',

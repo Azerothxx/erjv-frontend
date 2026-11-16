@@ -1,3 +1,4 @@
+import type { LastEditedAttribution } from '@/lib/last-edited'
 import type { CursorParams } from '@/lib/cursor-pagination'
 
 export type SalesOrderStatus =
@@ -36,7 +37,7 @@ export interface SalesOrderItemRecord {
   updatedAt: string
 }
 
-export interface SalesOrderRecord {
+export interface SalesOrderRecord extends LastEditedAttribution {
   id: number
   revision: number
   orderNumber: string

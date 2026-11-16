@@ -1,3 +1,4 @@
+import { noLastEditor } from '@/test/last-edited'
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen, waitFor, within, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -18,8 +19,8 @@ let requests: { url: string; method: string; body: Record<string, unknown>; para
 beforeEach(() => {
   auth.isAdmin = true; auth.isManager = false; auth.isStaff = false
   requests = []
-  deliveries = [8, 9, 10].map((id) => ({ id, deliveryNumber: `OUT-${id}`, revision: 3, status: 'READY', warehouseId: id === 10 ? 3 : 2, runId: null, salesOrderId: id + 3, plannedItems: [{ id: 1, outgoingDeliveryId: id, salesOrderItemId: 1, plannedQuantity: '1.00', createdAt: '', updatedAt: '' }], items: [], notes: null, reconciledAt: null, reconciledByUserId: null, fulfillmentOutcome: null, hasDamage: false, hasMissing: false, cancelledAt: null, createdAt: '', updatedAt: '' }))
-  run = { id: 1, runNumber: 'RUN-1', revision: 4, status: 'DRAFT', warehouseId: 2, driverEmployeeId: null, deliveryVehicleId: null,
+  deliveries = [8, 9, 10].map((id) => ({ ...noLastEditor, id, deliveryNumber: `OUT-${id}`, revision: 3, status: 'READY', warehouseId: id === 10 ? 3 : 2, runId: null, salesOrderId: id + 3, plannedItems: [{ id: 1, outgoingDeliveryId: id, salesOrderItemId: 1, plannedQuantity: '1.00', createdAt: '', updatedAt: '' }], items: [], notes: null, reconciledAt: null, reconciledByUserId: null, fulfillmentOutcome: null, hasDamage: false, hasMissing: false, cancelledAt: null, createdAt: '', updatedAt: '' }))
+  run = { ...noLastEditor, id: 1, runNumber: 'RUN-1', revision: 4, status: 'DRAFT', warehouseId: 2, driverEmployeeId: null, deliveryVehicleId: null,
     scheduledDepartureAt: '2026-10-29T02:00:00Z', dispatchedAt: null, completedAt: null, cancelledAt: null, departureConfirmedByUserId: null,
     loadedWeightKg: null, capacityKgAtDeparture: null, notes: 'Original notes', createdAt: '', updatedAt: '',
     deliveries: [{ id: 7, revision: 9, deliveryNumber: 'OUT-7', status: 'READY', salesOrderId: 10, warehouseId: 2 }] }

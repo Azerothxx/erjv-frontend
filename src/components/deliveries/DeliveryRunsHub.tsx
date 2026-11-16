@@ -1,3 +1,4 @@
+import { LastEditedBy } from '@/components/common/LastEditedBy'
 import { AddDeliveryToTrip } from './AddDeliveryToTrip'
 import { DeliveryOrderReview } from './DeliveryOrderReview'
 import { X } from 'lucide-react'
@@ -1138,6 +1139,10 @@ function RunDetails({ id, onClose, onDeparted, readOnly = false }: { id: number;
                   <dd>
                     {run.loadedWeightKg != null && run.capacityKgAtDeparture != null ? `${run.loadedWeightKg} / ${run.capacityKgAtDeparture} kg` : run.status === 'DRAFT' ? 'Checked during departure review' : 'Not recorded'}
                   </dd>
+                </div>
+                <div>
+                  <dt>Last edited</dt>
+                  <dd><LastEditedBy record={run} /></dd>
                 </div>
               </dl>
               </section>

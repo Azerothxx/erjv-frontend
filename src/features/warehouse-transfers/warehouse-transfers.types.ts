@@ -1,3 +1,4 @@
+import type { LastEditedAttribution } from '@/lib/last-edited'
 export type TransferStatus = 'DRAFT' | 'DISPATCHED' | 'COMPLETED' | 'CANCELLED'
 export const transferStatuses: { value: TransferStatus | 'ALL'; label: string }[] = [
   { value: 'ALL', label: 'All Transfers' },
@@ -26,7 +27,7 @@ export type TransferItem = TransferLineInput & {
   destinationStockItemId: number | null
   discrepancyReason: string | null
 } & Record<OutcomeField, string | null>
-export type WarehouseTransfer = {
+export type WarehouseTransfer = LastEditedAttribution & {
   id: number
   transferNumber: string
   revision: number

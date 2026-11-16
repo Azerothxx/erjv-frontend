@@ -1,3 +1,4 @@
+import { noLastEditor } from '@/test/last-edited'
 import type { PropsWithChildren } from 'react'
 import { act, renderHook, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -10,7 +11,7 @@ const original = apiClient.defaults.adapter
 afterEach(() => {
   apiClient.defaults.adapter = original
 })
-const delivery = (id: number): OutgoingDeliveryRecord => ({
+const delivery = (id: number): OutgoingDeliveryRecord => ({ ...noLastEditor,
   id,
   deliveryNumber: `OUT-${id}`,
   revision: 3,

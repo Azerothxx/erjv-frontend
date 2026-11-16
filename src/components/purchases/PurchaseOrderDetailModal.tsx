@@ -1,3 +1,4 @@
+import { LastEditedBy } from '@/components/common/LastEditedBy'
 import {
   OrderDetailFooter,
   type OrderDetailAction,
@@ -259,6 +260,7 @@ export function PurchaseOrderDetailModal({
               ...(order.externalReference
                 ? [{ label: 'Supplier Reference', value: order.externalReference }]
                 : []),
+              { label: 'Last edited', value: <LastEditedBy record={order} /> },
             ]}
           />
           {order.notes && (

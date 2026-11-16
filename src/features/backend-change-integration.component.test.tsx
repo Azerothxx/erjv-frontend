@@ -1,3 +1,4 @@
+import { noLastEditor } from '@/test/last-edited'
 import { createElement, type PropsWithChildren } from 'react'
 import { act, render, renderHook, screen } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -188,7 +189,7 @@ it('does not show receipt quantities before an incoming delivery is confirmed', 
     driver: '—',
     date: null,
     status: 'DRAFT',
-    record: {
+    record: { ...noLastEditor,
       id: 7,
       revision: 1,
       deliveryNumber: 'IN-7',

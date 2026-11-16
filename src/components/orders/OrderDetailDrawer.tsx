@@ -1,3 +1,4 @@
+import { LastEditedBy } from '@/components/common/LastEditedBy'
 import { formatContactPhone } from '@/lib/phone-utils'
 import {
   OrderDetailFooter,
@@ -278,6 +279,7 @@ export function OrderDetailDrawer({
                 ...(order.externalReference
                   ? [{ label: 'Reference', value: order.externalReference }]
                   : []),
+                { label: 'Last edited', value: <LastEditedBy record={order} /> },
               ]}
             />
             <section aria-label="Ordered items" className="flex flex-col gap-3">

@@ -1,3 +1,4 @@
+import { noLastEditor } from '@/test/last-edited'
 import { getAdapter } from 'axios'
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
@@ -59,7 +60,7 @@ beforeEach(() => {
   auth.isAdmin = true
   auth.isManager = false
   auth.isStaff = false
-  run = {
+  run = { ...noLastEditor,
     id: 40,
     runNumber: 'RUN-40',
     revision: 2,

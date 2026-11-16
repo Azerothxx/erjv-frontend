@@ -1,3 +1,4 @@
+import { noLastEditor } from '@/test/last-edited'
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -33,7 +34,7 @@ function order(id: number, status: SalesOrderRecord['status'] = 'CONFIRMED'): Sa
   } as SalesOrderRecord
 }
 function shipment(id = 90): OutgoingDeliveryRecord {
-  return {
+  return { ...noLastEditor,
     id,
     revision: 1,
     salesOrderId: 1,
