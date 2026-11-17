@@ -175,7 +175,7 @@ export function QuarantinedStock({ stockItemId }: { stockItemId?: number } = {})
           data={query.items}
           columns={columns}
           getRowKey={(lot) => lot.id}
-          isLoading={query.isFetching}
+          isLoading={query.isLoading}
           emptyContent="No quarantine lots match these filters."
         />
       )}

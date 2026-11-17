@@ -329,7 +329,7 @@ export function WarehouseList({ onOpenWarehouse }: { onOpenWarehouse: (id: numbe
           ) : null
         }
         onRowClick={(warehouse) => onOpenWarehouse(warehouse.id)}
-        isLoading={warehousesQuery.isFetching || stockQuery.isLoading}
+        isLoading={warehousesQuery.isLoading || stockQuery.isLoading}
         loadingMessage="Loading warehouses..."
         emptyContent={
           searchTerm

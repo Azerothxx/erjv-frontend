@@ -116,7 +116,7 @@ export function VehicleDetailModal({
             <DataTable
               pagination={false}
               manualSorting
-              isLoading={query.isFetching}
+              isLoading={query.isLoading}
               data={trips}
               getRowKey={(delivery) => delivery.id}
               tableClassName="min-w-[640px]"

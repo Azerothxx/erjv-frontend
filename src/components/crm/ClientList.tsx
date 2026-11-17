@@ -170,7 +170,7 @@ export function ClientList() {
           pagination={false}
           columns={customerColumns}
           getRowKey={(client) => client.id}
-          isLoading={clientsQuery.isFetching}
+          isLoading={clientsQuery.isLoading}
           loadingMessage="Loading customers..."
           tableClassName="min-w-[960px]"
           emptyContent={

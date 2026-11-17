@@ -297,7 +297,7 @@ export function DeliveriesHub({
   const hasDeliveryError =
     (incomingEnabled && incomingQuery.isError) || (outgoingEnabled && outgoingQuery.isError)
   const isLoadingDeliveries =
-    (incomingEnabled && incomingQuery.isFetching) || (outgoingEnabled && outgoingQuery.isFetching)
+    (incomingEnabled && incomingQuery.isLoading) || (outgoingEnabled && outgoingQuery.isLoading)
   const isFetchingDeliveries =
     (incomingEnabled && incomingQuery.isFetching) || (outgoingEnabled && outgoingQuery.isFetching)
   const rows = buildDeliveryRows({
