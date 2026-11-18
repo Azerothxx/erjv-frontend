@@ -73,7 +73,7 @@ describe('record-first delivery tables', () => {
     const { onViewOrder } = mount(record)
     expect(screen.getByRole('columnheader', { name: 'Issue' })).toBeTruthy()
     const badge = screen.getByText('Needs review').closest<HTMLElement>('[data-slot="badge"]')!
-    expect(badge.className).toContain('bg-muted')
+    expect(badge.className).toContain('bg-status-warning')
     expect(badge.querySelector('[data-slot="status-dot"]')).toBeTruthy()
     badge.focus()
     expect((await screen.findByRole('tooltip')).textContent).toContain('Choose an arrival date.')

@@ -6,7 +6,7 @@ import type {
   DeliveryRunRecord, DispatchDeliveryRunPayload, ReconcileRunMemberPayload,
   RunMemberActionPayload, RunMemberReconciliationResponse, RunMemberRevision,
   UpdateDeliveryRunDraftPayload,
-  RunTransferRevision, ChangeRunTransfersPayload,
+  RunTransferRevision, ChangeRunTransfersPayload, RunTransferCancelPayload,
 } from './delivery-runs.types'
 
 function requireId(id: number): number {
@@ -53,6 +53,18 @@ export async function changeRunTransfersApi(id: number, payload: ChangeRunTransf
     expectedRevision: requireRevision(payload.expectedRevision),
     ...(payload.add !== undefined ? { add: transfers(payload.add) } : {}),
     ...(payload.remove !== undefined ? { remove: transfers(payload.remove) } : {}),
+  })
+  return data
+}
+
+/** Unassigns a draft transfer from its draft trip and cancels it (a plain transfer cancel is rejected while it is in a trip). */
+export async function cancelRunTransferApi(id: number, transferId: number, payload: RunTransferCancelPayload): Promise<DeliveryRunRecord> {
+  const reason = payload.reason.trim()
+  if (!reason) throw new Error('Enter a reason for cancelling this transfer.')
+  const { data } = await apiClient.patch<DeliveryRunRecord>(`/delivery-runs/${requireId(id)}/warehouse-transfers/${requireId(transferId)}/cancel`, {
+    expectedRunRevision: requireRevision(payload.expectedRunRevision),
+    expectedTransferRevision: requireRevision(payload.expectedTransferRevision),
+    reason,
   })
   return data
 }

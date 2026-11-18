@@ -287,6 +287,7 @@ it('limits active status choices and resets the cursor when a status is chosen',
   expect(screen.queryByRole('option', { name: 'Completed' })).toBeNull()
   expect(screen.queryByRole('option', { name: 'Cancelled' })).toBeNull()
   await userEvent.click(screen.getByRole('option', { name: 'Preparing' }))
+  await userEvent.click(screen.getByRole('button', { name: 'Done' }))
   await screen.findByRole('button', { name: 'TRIP-33' })
   expect(requests.filter((entry) => entry.url === '/delivery-runs').at(-1)?.params.statuses).toEqual(['DRAFT'])
   expect(requests.filter((entry) => entry.url === '/delivery-runs').at(-1)?.params.cursor).toBeUndefined()

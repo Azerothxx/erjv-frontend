@@ -1,4 +1,4 @@
-export type QuarantineCondition = 'DAMAGED' | 'SPOILED'
+export type QuarantineCondition = 'DAMAGED' | 'SPOILED' | 'OVERAGE'
 export type CreateManualQuarantinePayload = ManualQuarantinePayload
 export type QuarantineAction = 'CLEAR' | 'REMOVE'
 export type ManualQuarantinePayload = {

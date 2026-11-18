@@ -11,6 +11,7 @@ import {
   PurchasesRoute,
   SalesOrdersRoute,
   StaffingAccess,
+  SuperAdminAccess,
   FinancialReportsAccess,
   WarehousesRoute,
 } from './DashboardPages'
@@ -41,6 +42,11 @@ const EmployeeList = lazy(() =>
 )
 const JobList = lazy(() =>
   import('@/components/staffing/JobList').then((module) => ({ default: module.JobList })),
+)
+const AuditLogList = lazy(() =>
+  import('@/components/staffing/AuditLogList').then((module) => ({
+    default: module.AuditLogList,
+  })),
 )
 const UserRolesList = lazy(() =>
   import('@/components/staffing/UserRolesList').then((module) => ({
@@ -244,6 +250,16 @@ export function AppRoutes() {
             element={
               <RouteBoundary>
                 <UserRolesList />
+              </RouteBoundary>
+            }
+          />
+        </Route>
+        <Route element={<SuperAdminAccess />}>
+          <Route
+            path="audit-log"
+            element={
+              <RouteBoundary>
+                <AuditLogList />
               </RouteBoundary>
             }
           />

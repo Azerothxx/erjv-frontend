@@ -18,6 +18,7 @@ export const NAV_ITEM_KEYS = [
   'users',
   'orders',
   'financial-reports',
+  'audit-log',
 ] as const
 
 export type NavItemKey = (typeof NAV_ITEM_KEYS)[number]
@@ -36,6 +37,7 @@ export const ROUTES = {
   staffDirectory: '/staff-directory',
   jobPositions: '/job-positions',
   userRoles: '/user-roles',
+  auditLog: '/audit-log',
   inventory: '/inventory',
   quarantinedStock: '/inventory/quarantined',
   warehouses: '/warehouses',
@@ -58,6 +60,7 @@ const SCREEN_ROUTES: Record<Exclude<NavItemKey, 'deliveries'>, string> = {
   employees: ROUTES.staffDirectory,
   jobs: ROUTES.jobPositions,
   users: ROUTES.userRoles,
+  'audit-log': ROUTES.auditLog,
   inventory: ROUTES.inventory,
   'quarantined-stock': ROUTES.quarantinedStock,
   warehouses: ROUTES.warehouses,

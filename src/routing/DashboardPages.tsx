@@ -106,6 +106,12 @@ export function StaffingAccess() {
   return isAdmin || isManager ? <Outlet /> : <Navigate replace to={ROUTES.home} />
 }
 
+/** Audit events are readable by SUPERADMIN only; other roles never see the page or its nav entry. */
+export function SuperAdminAccess() {
+  const { isSuperAdmin } = useAuth()
+  return isSuperAdmin ? <Outlet /> : <Navigate replace to={ROUTES.home} />
+}
+
 export function LegacyRedirect() {
   const { screen } = useParams()
   return isNavItemKey(screen) ? (

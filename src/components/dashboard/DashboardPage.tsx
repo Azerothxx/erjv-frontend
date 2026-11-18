@@ -20,13 +20,15 @@ function countLabel(count: number, complete: boolean) {
       : 'Not verified'
 }
 
+const COLLAPSED_TASK_COUNT = 4
+
 export function DashboardPage() {
   const { isAdmin } = useAuth()
   const { onOpenInventory } = useOutletContext<DashboardOutletContext>()
   const now = new Date()
   const inventory = useStockWarnings()
   const deliveries = useDashboardDeliveries()
-  const [visibleTasks, setVisibleTasks] = useState(4)
+  const [showAllTasks, setShowAllTasks] = useState(false)
   const previews = [
     {
       label: 'Awaiting receipt',
@@ -210,7 +212,7 @@ export function DashboardPage() {
             </p>
           )}
           <ul className="mt-1 divide-y">
-            {attention.slice(0, visibleTasks).map((item) => {
+            {attention.slice(0, showAllTasks ? undefined : COLLAPSED_TASK_COUNT).map((item) => {
               const content = (
                 <>
                   <span
@@ -247,19 +249,18 @@ export function DashboardPage() {
               Nothing needs attention.
             </p>
           )}
-          {attention.length > visibleTasks && (
-            <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
-              <p className="text-xs text-muted-foreground">
-                Showing {visibleTasks} of {attention.length} loaded tasks.
-              </p>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setVisibleTasks((count) => count + 4)}
-              >
-                Show more tasks
-              </Button>
-            </div>
+          {attention.length > COLLAPSED_TASK_COUNT && (
+            <details
+              open={showAllTasks}
+              onToggle={(event) => setShowAllTasks(event.currentTarget.open)}
+              className="text-sm text-muted-foreground"
+            >
+              <summary className="min-h-11 cursor-pointer rounded py-3 font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                {showAllTasks
+                  ? 'Show fewer tasks'
+                  : `Show ${attention.length - COLLAPSED_TASK_COUNT} more tasks`}
+              </summary>
+            </details>
           )}
         </section>
       </div>

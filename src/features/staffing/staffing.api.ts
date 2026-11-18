@@ -3,8 +3,6 @@ import { requireJobName } from './job-validation'
 import { requirePassword } from '@/features/auth/session'
 import { fetchCursorList } from '@/lib/cursor-pagination'
 import { apiClient, extractArray, type FetchParams } from '@/lib/api-client'
-import type { CursorParams } from '@/lib/cursor-pagination'
-import type { LookupPage } from '@/lib/use-cursor-lookup'
 import type { UserRole } from '../auth/auth.types'
 import type {
   CreateEmployeePayload,
@@ -23,21 +21,6 @@ import type {
 
 export async function fetchEmployeesApi(params?: FetchParams): Promise<Employee[]> {
   return fetchCursorList<Employee>('/employees', params)
-}
-
-export type EmployeeFilter = FetchParams & CursorParams & {
-  q?: string
-  canDrive?: 'true' | 'false'
-  available?: 'true'
-}
-
-export async function fetchAvailableDriversApi(params: EmployeeFilter = {}): Promise<LookupPage<Employee>> {
-  const { data } = await apiClient.get<LookupPage<Employee>>('/employees', {
-    params: { ...params, canDrive: 'true', available: 'true', includeInactive: 'false', limit: params.limit ?? 50 },
-  })
-  if (!Array.isArray(data?.items) || !(data.nextCursor === null || typeof data.nextCursor === 'string'))
-    throw new Error('The server returned an invalid driver page. Reload before continuing.')
-  return data
 }
 
 export async function updateEmployeeDrivingEligibilityApi(id: number, canDrive: boolean): Promise<Employee> {
@@ -119,11 +102,6 @@ export async function reactivateEmployeeApi(id: number): Promise<Employee> {
 
 export async function fetchJobsApi(params?: FetchParams): Promise<Job[]> {
   return fetchCursorList<Job>('/jobs', params)
-}
-
-export async function fetchJobByIdApi(id: number): Promise<Job | null> {
-  const { data } = await apiClient.get<Job>(`/jobs/${id}`)
-  return data
 }
 
 export async function fetchJobByNameApi(name: string): Promise<Job | null> {

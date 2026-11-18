@@ -5,6 +5,7 @@ import {
   correctQuarantineConditionApi,
   createManualQuarantineApi,
   resolveQuarantineApi,
+  approveOverageApi,
 } from './quarantine.api'
 import type {
   ManualQuarantinePayload,
@@ -88,6 +89,21 @@ export function useCorrectQuarantineCondition() {
     retry: false,
     mutationFn: ({ id, payload }: { id: number; payload: QuarantineConditionPayload }) =>
       correctQuarantineConditionApi(id, payload),
+    onSettled: () => refreshStockConditionQueries(client),
+  })
+}
+
+export function useApproveOverage() {
+  const client = useQueryClient()
+  return useMutation({
+    retry: false,
+    mutationFn: ({
+      id,
+      payload,
+    }: {
+      id: number
+      payload: Parameters<typeof approveOverageApi>[1]
+    }) => approveOverageApi(id, payload),
     onSettled: () => refreshStockConditionQueries(client),
   })
 }

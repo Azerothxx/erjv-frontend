@@ -653,7 +653,7 @@ describe('inventory and global stock warnings', () => {
     const cells = within(mango).getAllByRole('cell')
     expect(cells.map((cell) => cell.textContent)).toEqual([
       `${longName}kg`,
-      '',
+      'Not set',
       '50.25',
       '42.25',
       '8 kg',

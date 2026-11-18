@@ -17,7 +17,7 @@ export function getPurchaseOrderProgressDisplay(
   if (order.status === 'CANCELLED')
     return {
       label: 'Cancelled',
-      tone: 'neutral',
+      tone: 'destructive',
       explanation:
         'This purchase order was cancelled. Its saved items remain available for review.',
       milestones: [{ id: 'cancelled', label: 'Cancelled', state: 'cancelled' }],
@@ -25,7 +25,7 @@ export function getPurchaseOrderProgressDisplay(
   if (order.status === 'PARTIALLY_RECEIVED')
     return {
       label: 'Partially Received',
-      tone: 'progress',
+      tone: 'partial',
       explanation:
         'Some goods have been accepted. Review the remaining quantities and any damaged goods before scheduling another arrival.',
       milestones: [],
@@ -54,6 +54,7 @@ export function getPurchaseOrderProgressDisplay(
     )
   ) {
     label = 'Arrival Scheduled'
+    tone = 'progress'
     stage = 2
     explanation = 'Arrival is scheduled. Return to Receive Goods when the supplier arrives.'
   }
@@ -122,7 +123,7 @@ export function getPurchaseOrderDetailProgress(
 export const PURCHASE_ORDER_STATUS = {
   DRAFT: { label: 'Draft', tone: 'neutral' },
   CONFIRMED: { label: 'Confirmed', tone: 'info' },
-  PARTIALLY_RECEIVED: { label: 'Partially Received', tone: 'progress' },
+  PARTIALLY_RECEIVED: { label: 'Partially Received', tone: 'partial' },
   RECEIVED: { label: 'Received', tone: 'success' },
   CANCELLED: { label: 'Cancelled', tone: 'destructive' },
 } as const

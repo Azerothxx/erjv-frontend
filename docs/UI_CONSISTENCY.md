@@ -168,7 +168,7 @@ Purchase Orders currently expose `DRAFT`, `CONFIRMED`, `PARTIALLY_RECEIVED`, `RE
 
 - **One current state, including table rows:** use `StatusBadge`. Feature wrappers may supply labels, tones, titles, and optional dots, but must not recreate badge markup or local pill styles. Directory Active/Archived labels use `DirectoryStatusBadge`, which delegates to `StatusBadge`.
 - **Several meaningful lifecycle stages in record details:** use the existing segmented `LifecycleProgress` (the project's canonical segmented progress component). Do not introduce a separate `SegmentedProgress` implementation, numbered squares, or connected-circle stepper. A table status is never replaced by a progress bar.
-- Routine statuses use the Sales Order treatment: `appearance="subtle"`, a neutral surface/border/text, and a semantic decorative dot. Shared badge typography, padding, radius, and line height come from `Badge` / `StatusBadge`; pages must not override them. `w-fit`, `min-w-max`, `shrink-0` and `whitespace-nowrap` keep status pills content-sized and on one line. Status cells must allow their intrinsic width; do not break words, ellipsize labels, or stretch pills across a cell. Transfer Status headers/cells use a minimum width, while wider tables retain their existing responsive scrolling.
+- Every status badge is filled with the lighter tint of its tone (surface, border and text) plus a semantic dot, so status reads at a glance. `appearance` is accepted for compatibility but no longer changes the colors. Statuses within one status set must not share a tone. Shared badge typography, padding, radius, and line height come from `Badge` / `StatusBadge`; pages must not override them. `w-fit`, `min-w-max`, `shrink-0` and `whitespace-nowrap` keep status pills content-sized and on one line. Status cells must allow their intrinsic width; do not break words, ellipsize labels, or stretch pills across a cell. Transfer Status headers/cells use a minimum width, while wider tables retain their existing responsive scrolling.
 - Use semantic tokens through the shared tone API, not local greens, blues, grays, or per-module color classes. Labels remain visible so color is never the only meaning. Optional `showDot={false}` keeps the same badge geometry and surface.
 - Use `appearance="emphasis"` for exceptional conditions requiring attention, such as low/out-of-stock warnings, rather than ordinary Active, Ready, or Completed states. Notification counters, role/category metadata, quantity chips, and interactive role selectors are different components, not operational status badges.
 
@@ -176,10 +176,12 @@ Purchase Orders currently expose `DRAFT`, `CONFIRMED`, `PARTIALLY_RECEIVED`, `RE
 | --- | --- | --- |
 | Draft, inactive, archived, unknown | `neutral` | Draft trips/transfers, archived accounts/products; do not interpret unknown as success |
 | Active, available, normal stock | `success` | Green dot signifies availability/current activity, not workflow completion |
-| Ready, awaiting receipt | `info` | Ready outgoing delivery remains distinct from departure; scheduled incoming remains distinct from receipt |
-| Dispatched / in progress, maintenance | `warning` | Preserve existing operational meaning and label; assignment alone is not dispatch |
+| Ready, awaiting receipt, confirmed | `info` | Ready outgoing delivery remains distinct from departure; scheduled incoming remains distinct from receipt |
+| Preparing, arrival scheduled | `progress` (violet) | Planning is saved; goods have not departed or arrived |
+| Partially delivered / partially received | `partial` (teal) | Some goods are accounted for; the order is not complete |
+| Dispatched / in transit, maintenance | `warning` | Preserve existing operational meaning and label; assignment alone is not dispatch |
 | Completed / received / reconciled | `success` | Use the domain's authoritative label and verified outcome |
-| Cancelled / out of service / out of stock | `destructive` | Routine cancellation uses the subtle surface; exceptional stock warnings may use emphasis |
+| Cancelled / out of service / out of stock | `destructive` | Cancelled uses the same red tint on every page, so it never shares a color with Draft |
 
 Trip and warehouse-transfer details currently show current-state badges without a multistage stepper. Do not add a lifecycle just to match another module. The domain must first support a truthful sequence; no new backend states, timestamps, transitions, or completion claims are authorized by this standard.
 
@@ -285,7 +287,7 @@ Preserve current theme values until an authorized palette change. Consume roles 
 | Supporting surfaces and text | `secondary/secondary-foreground`, `muted/muted-foreground`, `accent/accent-foreground` |
 | Brand text and actions | `primary`, `primary-text`, paired primary foregrounds, `primary-contrast`, and shared hover/active/disabled variants; `text-primary` uses the separate text role |
 | Selected and subtle brand cues | `primary-selected`, `primary-subtle`; do not introduce duplicate tint names |
-| Feedback | `status-info`, `status-warning`, `status-success` and each matching foreground; destructive text/action roles for errors and destructive actions |
+| Feedback | `status-info`, `status-warning`, `status-success`, `status-progress`, `status-partial` and each matching foreground; destructive text/action roles for errors and destructive actions |
 | Lines and focus | `border-border` for structure, `border-input` for editable controls, `ring-ring` for focus |
 
 - Define theme-dependent values centrally in `:root` / `.dark` and expose reusable roles through `@theme inline`. Do not add unused custom properties, another feature palette, raw colors, or independent `dark:*` recoloring for a standard role. Brand artwork may retain its established colors without becoming a feature palette.

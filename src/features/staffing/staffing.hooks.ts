@@ -2,7 +2,6 @@ import { useAuth } from '@/features/auth/AuthContext'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from '@/lib/notifications'
 import { getErrorMessage, type FetchParams } from '@/lib/api-client'
-import { useCursorLookup } from '@/lib/use-cursor-lookup'
 import { USER_ROLES, type UserRole } from '../auth/roles'
 import { registerApi } from '../auth/auth.api'
 import {
@@ -65,10 +64,6 @@ export function useEmployees(params?: FetchParams) {
 
 export function useAllEmployees() {
   return useEmployees({ includeInactive: 'true' })
-}
-
-export function useAvailableDrivers(q = '') {
-  return useCursorLookup<Employee>('/employees', { canDrive: 'true', available: 'true', includeInactive: 'false', ...(q.trim() ? { q: q.trim() } : {}) })
 }
 
 export function useUpdateEmployeeDrivingEligibility() {

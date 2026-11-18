@@ -256,7 +256,7 @@ function ItemFormContent({
             />
             {isEditing && (
               <p className="mt-1.5 text-xs text-muted-foreground">
-                Stock unit cannot be changed here.
+                The unit can&apos;t be changed because existing stock, orders, and deliveries are recorded in it. To sell this product in a different unit, create a new item and archive this one when its stock runs out.
               </p>
             )}
           </div>

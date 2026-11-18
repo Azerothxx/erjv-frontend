@@ -382,7 +382,7 @@ export function PurchasesView({
   const renderStatusBadge = (status: PurchaseOrderRecord['status']) => (
     <StatusBadge
       label={PURCHASE_ORDER_STATUS[status].label}
-      tone={status === 'CANCELLED' ? 'neutral' : PURCHASE_ORDER_STATUS[status].tone}
+      tone={PURCHASE_ORDER_STATUS[status].tone}
     />
   )
   const orderRows = filteredOrders.map((po) => {

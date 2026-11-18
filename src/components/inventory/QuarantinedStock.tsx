@@ -15,7 +15,7 @@ import type { QuarantineCondition, QuarantineLot } from '@/features/logistics/qu
 import { getErrorMessage } from '@/lib/api-client'
 import { QuarantineLotDialog } from './QuarantineLotDialog'
 
-const conditionLabels: Record<QuarantineCondition, string> = { DAMAGED: 'Damaged', SPOILED: 'Spoiled' }
+const conditionLabels: Record<QuarantineCondition, string> = { DAMAGED: 'Damaged', SPOILED: 'Spoiled', OVERAGE: 'Overage' }
 const sourceLabels: Record<QuarantineLot['sourceKind'], string> = {
   MANUAL: 'Manual',
   INCOMING_DELIVERY: 'Incoming Delivery',
@@ -98,6 +98,7 @@ export function QuarantinedStock({ stockItemId }: { stockItemId?: number } = {})
         { value: 'ALL', label: 'All conditions' },
         { value: 'DAMAGED', label: 'Damaged' },
         { value: 'SPOILED', label: 'Spoiled' },
+        { value: 'OVERAGE', label: 'Overage' },
       ],
     },
     {

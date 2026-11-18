@@ -9,9 +9,9 @@ import {
   ChevronRight,
   MapPin,
   Package,
+  Pencil,
   Phone,
   Search,
-  Settings2,
   Warehouse as WarehouseIcon,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -89,7 +89,7 @@ export function WarehouseInventory({
       {
         id: 'product',
         header: 'Product',
-        width: isAdmin || isManager ? '30%' : '36%',
+        width: '30%',
         sortable: false,
         sortKey: (row) => row.stock.inventoryItem?.name ?? '',
         cell: ({ row }) => (
@@ -104,29 +104,40 @@ export function WarehouseInventory({
           </div>
         ),
       },
-      ...(isAdmin || isManager ? [{
+      {
         id: 'stock-alert',
         header: 'Low-Stock Alert',
-        width: '12%',
-        cell: ({ row }: { row: StockRow }) => (
-          <OverflowValue
-            asChild
-            value="Low-Stock Alert"
-            fullValue={`Set low-stock alert for ${row.stock.inventoryItem?.name ?? 'product'}`}
-            showFullValueOnHover
-          >
-            <Button
-              variant="ghost"
-              size="icon"
-              className="size-8 pointer-coarse:size-11"
-              onClick={() => setThresholdStock(row.stock)}
-              aria-label={`Set low-stock alert for ${row.stock.inventoryItem?.name ?? 'product'}`}
+        width: '16%',
+        align: 'right',
+        sortable: false,
+        cell: ({ row }: { row: StockRow }) => {
+          const productName = row.stock.inventoryItem?.name ?? 'product'
+          const thresholdCents = parseStockCents(row.stock.reorderThreshold)
+          const display = thresholdCents === null
+            ? 'Not set'
+            : `${formatStockCents(thresholdCents)} ${formatProductUnit(row.stock.inventoryItem?.unit)}`.trim()
+          if (!(isAdmin || isManager))
+            return <OverflowValue value={display} className="text-right text-sm tabular-nums" />
+          return (
+            <OverflowValue
+              asChild
+              value={display}
+              fullValue={`Set low-stock alert for ${productName}`}
+              showFullValueOnHover
             >
-              <Settings2 aria-hidden="true" />
-            </Button>
-          </OverflowValue>
-        ),
-      }] : []),
+              <button
+                type="button"
+                className="group inline-flex max-w-full items-center justify-end gap-1 rounded px-1 py-1 text-sm font-normal tabular-nums text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-11"
+                onClick={() => setThresholdStock(row.stock)}
+                aria-label={`Set low-stock alert for ${productName}`}
+              >
+                <span className={cn('[overflow-wrap:anywhere]', thresholdCents === null && 'text-muted-foreground')}>{display}</span>
+                <Pencil aria-hidden="true" className="size-3 shrink-0 text-muted-foreground" />
+              </button>
+            </OverflowValue>
+          )
+        },
+      },
       {
         id: 'quantity',
         header: 'Physical',
@@ -146,7 +157,7 @@ export function WarehouseInventory({
       {
         id: 'available',
         header: 'Available',
-        width: isAdmin || isManager ? '20%' : '22%',
+        width: '18%',
         align: 'right',
         sortable: false,
         sortKey: (row) => stockSortKey(row.availableCents),
@@ -179,7 +190,7 @@ export function WarehouseInventory({
       {
         id: 'quarantined',
         header: 'Quarantined',
-        width: isAdmin || isManager ? '20%' : '24%',
+        width: '18%',
         align: 'right',
         sortable: false,
         sortKey: (row) => stockSortKey(row.quarantinedCents),

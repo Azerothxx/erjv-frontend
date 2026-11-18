@@ -20,6 +20,7 @@ import {
   ReceiptText,
   ChartNoAxesCombined,
   LayoutDashboard,
+  ScrollText,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
@@ -59,6 +60,7 @@ type NavGroup = {
     icon: React.ComponentType<{ className?: string }>
     requiresStaffAccess?: boolean
     requiresReportAccess?: boolean
+    requiresSuperAdmin?: boolean
   }[]
 }
 
@@ -106,6 +108,7 @@ const NAV_GROUPS: NavGroup[] = [
       { key: 'employees', label: 'Staff Directory', icon: Users, requiresStaffAccess: true },
       { key: 'jobs', label: 'Job Positions', icon: Briefcase, requiresStaffAccess: true },
       { key: 'users', label: 'User Roles & Access', icon: Shield, requiresStaffAccess: true },
+      { key: 'audit-log', label: 'Audit Log', icon: ScrollText, requiresSuperAdmin: true },
     ],
   },
 ]
@@ -117,7 +120,7 @@ export function DashboardLayout({
   onOpenInventory,
 }: DashboardLayoutProps) {
   const queryClient = useQueryClient()
-  const { user, logout, isAdmin, isManager } = useAuth()
+  const { user, logout, isAdmin, isManager, isSuperAdmin } = useAuth()
   const roleConfig =
     ROLE_DETAILS[user?.role || USER_ROLES.UNKNOWN] || ROLE_DETAILS[USER_ROLES.UNKNOWN]
   const [isMobileOpen, setIsMobileOpen] = useState(false)
@@ -157,7 +160,8 @@ export function DashboardLayout({
     items: group.items.filter(
       (item) =>
         (!item.requiresReportAccess || isAdmin) &&
-        (!item.requiresStaffAccess || isAdmin || isManager),
+        (!item.requiresStaffAccess || isAdmin || isManager) &&
+        (!item.requiresSuperAdmin || isSuperAdmin),
     ),
   })).filter((group) => group.items.length > 0)
 

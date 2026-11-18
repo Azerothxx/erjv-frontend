@@ -7,8 +7,6 @@ import type {
   SetReorderThresholdPayload,
   StockItem,
   StockItemWithInventoryItem,
-  StockItemWithRelations,
-  StockItemWithWarehouse,
   StockAdjustmentPayload,
   StockAdjustment,
 } from './stock-items.types'
@@ -17,15 +15,8 @@ import { fetchCursorList, type CursorParams } from '@/lib/cursor-pagination'
 
 export type StockPageFilter = CursorParams & { q?: string }
 
-// Complete traversal is reserved for explicit exports and empty-warehouse safety checks.
-export function fetchStockItemsApi(params: StockPageFilter = {}): Promise<StockItemWithRelations[]> {
-  return fetchCursorList('/stock-items', params)
-}
 export function fetchStockByWarehouseApi(warehouseId: number): Promise<StockItemWithInventoryItem[]> {
   return fetchCursorList(`/stock-items/warehouses/${warehouseId}`)
-}
-export function fetchStockByItemApi(inventoryItemId: number): Promise<StockItemWithWarehouse[]> {
-  return fetchCursorList(`/stock-items/inventory-items/${inventoryItemId}`)
 }
 
 export async function fetchStockItemByPairApi(

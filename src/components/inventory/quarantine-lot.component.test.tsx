@@ -389,6 +389,7 @@ it('sends stock, condition, and open/all filters from the quarantine view', asyn
   await user.click(screen.getByRole('option', { name: 'All lots' }))
   await user.click(screen.getByRole('button', { name: 'Filter quarantine by stock record' }))
   await user.click(screen.getByRole('menuitem', { name: 'Rice — Main Warehouse' }))
+  await user.click(screen.getByRole('button', { name: 'Done' }))
   await waitFor(() =>
     expect(filters).toContainEqual({
       stockItemId: 4,
@@ -888,4 +889,29 @@ it('supports keyboard selection through the compact radio group without writing 
   expect(screen.getByRole('combobox', { name: 'Corrected condition' })).toBeTruthy()
   expect(screen.queryByRole('textbox', { name: 'Quantity to remove' })).toBeNull()
   expect(writes).toHaveLength(0)
+})
+
+it('approves an overage lot through the dedicated endpoint instead of a plain release', async () => {
+  lot.condition = 'OVERAGE' as never
+  lot.reportedCondition = 'OVERAGE' as never
+  lot.sourceKind = 'INCOMING_DELIVERY'
+  const { client } = mount()
+  await screen.findByRole('radio', { name: 'Approve Overage' })
+  expect(screen.queryByRole('radio', { name: 'Release Stock' })).toBeNull()
+  expect(screen.queryByRole('radio', { name: 'Correct Condition' })).toBeNull()
+  expect(screen.getByRole('radio', { name: 'Remove Stock' })).toBeTruthy()
+  const radio = screen.getByRole('radio', { name: 'Approve Overage' })
+  await waitFor(() => expect(radio.matches(':disabled')).toBe(false))
+  fireEvent.click(radio)
+  fireEvent.change(screen.getByRole('textbox', { name: 'Quantity to approve' }), { target: { value: '1.00' } })
+  reason('Counted at the dock')
+  fireEvent.click(
+    screen.getByLabelText('I confirm the extra goods have been counted and may be added to available stock.'),
+  )
+  fireEvent.click(screen.getByRole('button', { name: 'Approve Overage' }))
+  await waitFor(() => expect(writes).toHaveLength(1))
+  expect(writes[0].url).toBe('/stock-items/quarantine-lots/8/approve-overage')
+  expect(writes[0].body).toMatchObject({ quantity: '1.00', reason: 'Counted at the dock', expectedRevision: 1 })
+  expect(writes[0].body).not.toHaveProperty('action')
+  await waitFor(() => expect(client.getQueryState(['stock-items'])?.isInvalidated).toBe(true))
 })

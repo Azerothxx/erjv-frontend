@@ -1087,3 +1087,28 @@ it('opens the related sales order through its identifier without changing trip m
   expect(screen.getAllByRole('dialog')).toHaveLength(1)
   expect(writes()).toHaveLength(0)
 })
+
+it('cancels a draft transfer from its draft trip with a required reason, and only for draft trips', async () => {
+  run.warehouseTransfers = [{ id: 31, transferNumber: 'TRF-31', revision: 6, status: 'DRAFT', destinationWarehouseId: 3 }] as typeof run.warehouseTransfers
+  mount()
+  await userEvent.click(await screen.findByRole('button', { name: 'Cancel Transfer' }))
+  const dialog = within(await screen.findByRole('dialog', { name: 'Cancel Transfer?' }))
+  const confirm = dialog.getByRole('button', { name: 'Cancel Transfer' })
+  expect(confirm.hasAttribute('disabled')).toBe(true)
+  await userEvent.type(dialog.getByLabelText(/Reason/), 'Destination is full')
+  await userEvent.click(confirm)
+  await waitFor(() => expect(writes()).toHaveLength(1))
+  expect(writes()[0]).toMatchObject({
+    url: '/delivery-runs/1/warehouse-transfers/31/cancel',
+    body: { expectedRunRevision: 4, expectedTransferRevision: 6, reason: 'Destination is full' },
+  })
+})
+
+it('does not offer transfer cancellation once the trip has been dispatched', async () => {
+  run.status = 'DISPATCHED'
+  run.warehouseTransfers = [{ id: 31, transferNumber: 'TRF-31', revision: 6, status: 'DISPATCHED', destinationWarehouseId: 3 }] as typeof run.warehouseTransfers
+  mount()
+  await screen.findByRole('dialog', { name: 'Delivery Trip RUN-1' })
+  expect(screen.queryByRole('button', { name: 'Cancel Transfer' })).toBeNull()
+  expect(writes()).toHaveLength(0)
+})

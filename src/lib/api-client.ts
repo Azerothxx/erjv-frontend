@@ -277,6 +277,8 @@ const domainMessages: Record<string, string> = {
   WAREHOUSE_INACTIVE: 'Select an active warehouse before continuing.',
   INVENTORY_ITEM_INACTIVE: 'This item is inactive. Review the selected items before continuing.',
   RETRYABLE_TRANSACTION_CONFLICT: 'Another operation changed these records. Reload and review the saved state before trying again.',
+  OVERAGE_APPROVAL_REQUIRED: 'This lot holds extra goods received beyond the order. Use Approve Overage instead of releasing it.',
+  NOT_OVERAGE_LOT: 'This lot is not an approvable overage. Reload it to see its current state.',
   INVALID_CURSOR: 'This page is no longer valid. Reset the filters or reload results.',
 }
 

@@ -6,7 +6,8 @@ const tones = {
   neutral: 'border-border bg-muted text-muted-foreground',
   warning: 'border-status-warning-foreground/20 bg-status-warning text-status-warning-foreground',
   info: 'border-status-info-foreground/20 bg-status-info text-status-info-foreground',
-  progress: 'border-status-info-foreground/20 bg-status-info text-status-info-foreground',
+  progress: 'border-status-progress-foreground/20 bg-status-progress text-status-progress-foreground',
+  partial: 'border-status-partial-foreground/20 bg-status-partial text-status-partial-foreground',
   success: 'border-status-success-foreground/20 bg-status-success text-status-success-foreground',
   destructive: 'border-destructive/20 bg-destructive/10 text-destructive',
 }
@@ -15,7 +16,8 @@ const dots = {
   neutral: 'bg-muted-foreground',
   warning: 'bg-status-warning-foreground',
   info: 'bg-status-info-foreground',
-  progress: 'bg-status-info-foreground',
+  progress: 'bg-status-progress-foreground',
+  partial: 'bg-status-partial-foreground',
   success: 'bg-status-success-foreground',
   destructive: 'bg-destructive',
 }
@@ -33,7 +35,9 @@ type StatusBadgeProps = Omit<BadgeProps, 'variant' | 'children'> & {
 export function StatusBadge({
   label,
   tone = 'neutral',
-  appearance = 'subtle',
+  // Kept for existing callers: every badge now uses its full tone tint.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  appearance: _appearance,
   showDot = true,
   className,
   ...props
@@ -43,7 +47,7 @@ export function StatusBadge({
       variant="outline"
       className={cn(
         'w-fit min-w-max shrink-0 gap-1.5 whitespace-nowrap leading-4',
-        appearance === 'emphasis' ? tones[tone] : 'border-border bg-muted text-muted-foreground',
+        tones[tone],
         className,
       )}
       {...props}

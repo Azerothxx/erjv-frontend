@@ -90,6 +90,28 @@ export async function correctQuarantineConditionApi(
   return data
 }
 
+/** Accepts extra goods received beyond the ordered quantity (ADMIN/MANAGER; a plain release is rejected for overage lots). */
+export async function approveOverageApi(
+  id: number,
+  payload: Pick<QuarantineResolutionPayload, 'quantity' | 'reason' | 'expectedRevision' | 'requestId'>,
+): Promise<QuarantineResolution> {
+  validateRevision(payload)
+  requireDecimalLimit(payload.quantity, 'Quantity', true)
+  const quantity = parseStockCents(payload.quantity)
+  if (quantity === null || quantity <= 0n || !payload.reason.trim())
+    throw Error('Enter a positive quantity with up to two decimals and a reason.')
+  const { data } = await apiClient.post<QuarantineResolution>(
+    `/stock-items/quarantine-lots/${id}/approve-overage`,
+    {
+      expectedRevision: payload.expectedRevision,
+      requestId: payload.requestId,
+      quantity: payload.quantity,
+      reason: payload.reason.trim(),
+    },
+  )
+  return data
+}
+
 export async function resolveQuarantineApi(
   id: number,
   payload: QuarantineResolutionPayload,
