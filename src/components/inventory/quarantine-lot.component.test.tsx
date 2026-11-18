@@ -380,7 +380,7 @@ it('sends stock, condition, and open/all filters from the quarantine view', asyn
     </QueryClientProvider>,
   )
   const user = userEvent.setup()
-  await screen.findByRole('button', { name: 'Review & Resolve' })
+  await screen.findByRole('button', { name: 'Review Stock' })
   expect(filters[0]).toEqual({ openOnly: true, limit: 50 })
   await user.click(screen.getByRole('button', { name: 'Filters' }))
   await user.click(screen.getByRole('combobox', { name: 'Condition' }))
@@ -399,10 +399,62 @@ it('sends stock, condition, and open/all filters from the quarantine view', asyn
     }),
   )
   expect(screen.getByText('Manual')).toBeTruthy()
-  await user.click(screen.getByRole('button', { name: 'Review & Resolve' }))
+  await user.click(screen.getByRole('button', { name: 'Review Stock' }))
   expect(await screen.findByRole('heading', { name: 'Review Quarantined Stock' })).toBeTruthy()
   expect(await screen.findByText('2.00 kg')).toBeTruthy()
 })
+
+it.each(
+  (['DAMAGED', 'SPOILED', 'OVERAGE'] as const).flatMap((condition) => [
+    { condition, role: 'STAFF', isAdmin: false, isManager: false },
+    { condition, role: 'MANAGER', isAdmin: false, isManager: true },
+    { condition, role: 'ADMIN', isAdmin: true, isManager: false },
+  ]),
+)(
+  'reviews selected $condition stock as $role through text-only actions without navigating or writing',
+  async ({ condition, isAdmin, isManager }) => {
+    auth.isAdmin = isAdmin
+    auth.isManager = isManager
+    const selectedLot = { ...lot, id: 9, condition, reportedCondition: condition, remainingQuantity: '1.25' }
+    const base = getAdapter(apiClient.defaults.adapter)
+    const reads: string[] = []
+    apiClient.defaults.adapter = async (config) => {
+      if (config.method !== 'get') return base(config)
+      reads.push(config.url ?? '')
+      const data = config.url === '/stock-items' ? { items: [stock], nextCursor: null }
+        : config.url === '/stock-items/quarantine-lots' ? { items: [lot, selectedLot], nextCursor: null }
+          : config.url === '/stock-items/quarantine-lots/9' ? selectedLot : undefined
+      return data ? { config, data, status: 200, statusText: '', headers: {} } : base(config)
+    }
+    const onClick = vi.fn()
+    render(
+      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+        <div onClick={onClick}>
+          <QuarantinedStock />
+        </div>
+      </QueryClientProvider>,
+    )
+    const buttons = await screen.findAllByRole('button', { name: 'Review Stock' })
+    expect(buttons).toHaveLength(2)
+    for (const button of buttons) {
+      expect(button.textContent).toBe('Review Stock')
+      expect(button.querySelector('svg')).toBeNull()
+    }
+    const user = userEvent.setup()
+    await user.click(screen.getByText('1.25'))
+    expect(screen.queryByRole('dialog')).toBeNull()
+    onClick.mockClear()
+    buttons[1].focus()
+    await user.keyboard('{Enter}')
+    expect(await screen.findByRole('heading', { name: 'Review Quarantined Stock' })).toBeTruthy()
+    expect(await screen.findByText('1.25 kg')).toBeTruthy()
+    const action = screen.queryByRole('radio', { name: condition === 'OVERAGE' ? 'Approve Overage' : 'Release Stock' })
+    expect(Boolean(action)).toBe(isAdmin || isManager)
+    expect(reads).toContain('/stock-items/quarantine-lots/9')
+    expect(onClick).not.toHaveBeenCalled()
+    expect(writes).toHaveLength(0)
+  },
+)
 
 it('refreshes a conflicting correction and never automatically retries it', async () => {
   const adapter = getAdapter(apiClient.defaults.adapter)
@@ -760,7 +812,7 @@ it('loads subsequent quarantine lot pages into the canonical table', async () =>
   await screen.findByText('2.00')
   fireEvent.click(await screen.findByRole('button', { name: 'Next page' }))
   await screen.findByText('0.75')
-  expect(screen.getAllByRole('button', { name: 'Review & Resolve' })).toHaveLength(1)
+  expect(screen.getAllByRole('button', { name: 'Review Stock' })).toHaveLength(1)
   expect(screen.queryByText('2.00')).toBeNull()
 })
 

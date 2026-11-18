@@ -137,7 +137,11 @@ export function QuarantinedStock({ stockItemId }: { stockItemId?: number } = {})
       header: 'Actions',
       align: 'right',
       cell: ({ row }) => (
-        <DataTableActions onView={() => setSelected(row)} viewLabel="Review & Resolve" />
+        <DataTableActions>
+          <Button type="button" variant="outline" size="sm" onClick={() => setSelected(row)}>
+            Review Stock
+          </Button>
+        </DataTableActions>
       ),
     },
   ]
