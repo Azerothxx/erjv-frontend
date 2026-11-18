@@ -22,14 +22,14 @@ export function getSalesOrderProgressDisplay(
   if (order.status === 'CANCELLED')
     return {
       label: 'Cancelled',
-      tone: 'neutral',
+      tone: 'destructive',
       explanation: 'This order was cancelled. Its saved items remain available for review.',
       milestones: [{ id: 'cancelled', label: 'Cancelled', state: 'cancelled' }],
     }
   if (order.status === 'PARTIALLY_DELIVERED')
     return {
       label: 'Partially Delivered',
-      tone: 'progress',
+      tone: 'partial',
       explanation:
         'Some goods have been delivered. Review each shipment and the remaining quantities before arranging more.',
       milestones: [],
@@ -46,6 +46,7 @@ export function getSalesOrderProgressDisplay(
     explanation = 'Fulfillment is complete. Review the recorded delivery results below.'
   } else if (complete && linked.some((record) => record.status === 'DISPATCHED')) {
     label = 'In Transit'
+    tone = 'warning'
     stage = 2
     explanation =
       'Goods have departed. Return when the delivery outcomes are known to record results.'
@@ -54,6 +55,7 @@ export function getSalesOrderProgressDisplay(
     linked.some((record) => record.status === 'DRAFT' || record.status === 'READY')
   ) {
     label = 'Preparing'
+    tone = 'progress'
     stage = 2
     explanation =
       'Delivery preparation is saved. Ready goods have not necessarily departed; review the linked shipments.'

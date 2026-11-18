@@ -57,7 +57,7 @@ export function DataTableFilters({
   const count = filters.filter(active).length
   if (!filters.length) return null
   return (
-    <Dialog modal={false}>
+    <Dialog>
       <DialogTrigger asChild>
         <Button
           type="button"

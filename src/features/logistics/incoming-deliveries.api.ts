@@ -69,6 +69,35 @@ export async function scheduleIncomingDeliveryApi(
   return data
 }
 
+/** Moves an already-scheduled arrival (date and/or receiving warehouse); the delivery stays SCHEDULED. */
+export async function rescheduleIncomingDeliveryApi(
+  id: number,
+  payload: {
+    expectedRevision: number
+    warehouseId?: number
+    scheduledAt?: string
+  },
+): Promise<IncomingDeliveryRecord> {
+  if (payload.warehouseId === undefined && payload.scheduledAt === undefined)
+    throw Error('Change the arrival date or the receiving warehouse before saving.')
+  const { data } = await apiClient.patch<IncomingDeliveryRecord>(
+    `/incoming-deliveries/${id}/reschedule`,
+    {
+      expectedRevision: requireRevision(payload.expectedRevision),
+      ...(payload.scheduledAt !== undefined ? { scheduledAt: payload.scheduledAt } : {}),
+      ...(payload.warehouseId !== undefined ? { warehouseId: payload.warehouseId } : {}),
+    },
+  )
+  if (
+    data?.id !== id ||
+    data.status !== 'SCHEDULED' ||
+    !Number.isSafeInteger(data.revision) ||
+    data.revision < payload.expectedRevision
+  )
+    throw Error('The new arrival was not confirmed. Refresh this delivery before trying again.')
+  return data
+}
+
 export async function updateIncomingDraftApi(
   id: number,
   payload: {

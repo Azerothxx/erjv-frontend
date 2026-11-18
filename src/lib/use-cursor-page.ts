@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { fetchCursorPage, type CursorPage, type CursorParams } from './cursor-pagination'
 
-export function useCursorPage<T extends { id: number }, F extends CursorParams>(
+export function useCursorPage<T extends { id: number | string }, F extends CursorParams>(
   resource: string | readonly string[],
   filter: F,
   fetchPage: (filter: F, signal?: AbortSignal) => Promise<CursorPage<T>>,

@@ -46,7 +46,8 @@ it('distinguishes awaiting receipt from in-transit deliveries', () => {
       .querySelector('[data-slot="status-dot"]')
       ?.classList.contains('bg-status-warning-foreground'),
   ).toBe(true)
-  for (const badge of [incoming, outgoing]) expect(badge.classList.contains('bg-muted')).toBe(true)
+  expect(incoming.classList.contains('bg-status-info')).toBe(true)
+  expect(outgoing.classList.contains('bg-status-warning')).toBe(true)
 })
 
 it('keeps Ready distinct from dispatched status and preserves completed outcomes', () => {
@@ -58,7 +59,7 @@ it('keeps Ready distinct from dispatched status and preserves completed outcomes
     </>,
   )
   expect(
-    screen.getByText('Ready').closest('[data-slot="badge"]')?.classList.contains('bg-muted'),
+    screen.getByText('Ready').closest('[data-slot="badge"]')?.classList.contains('bg-status-info'),
   ).toBe(true)
   for (const label of ['Completed', 'Received'])
     expect(
@@ -99,9 +100,10 @@ it('shares the Sales Order subtle treatment for active directories and vehicle s
       <VehicleStatusBadge status="MAINTENANCE" />
     </>,
   )
-  for (const label of ['Active', 'Archived', 'Available', 'Maintenance']) {
+  const tints = { Active: 'bg-status-success', Archived: 'bg-muted', Available: 'bg-status-success', Maintenance: 'bg-status-warning' }
+  for (const [label, tint] of Object.entries(tints)) {
     const badge = screen.getByText(label).closest('[data-slot="badge"]')!
-    expect(badge.classList.contains('bg-muted')).toBe(true)
+    expect(badge.classList.contains(tint)).toBe(true)
     expect(badge.querySelector('[data-slot="status-dot"]')).toBeTruthy()
   }
   for (const label of ['Active', 'Available'])

@@ -50,6 +50,7 @@ import { CursorLookup } from '@/components/ui/CursorLookup'
 import { OverflowValue } from '@/components/ui/OverflowValue'
 import { DataTable, type ColumnDef } from '@/components/ui/data-table'
 import { ConfirmDeleteModal } from '@/components/ui/ConfirmDeleteModal'
+import { CancelRunTransferDialog } from './CancelRunTransferDialog'
 import { getApiError, getErrorMessage } from '@/lib/api-client'
 import {
   useDeliveryRunById,
@@ -59,6 +60,7 @@ import {
   useChangeRunTransfers,
   useReopenRunMember,
   useCancelRunMember,
+  useCancelRunTransfer,
   useCancelDeliveryRun,
 } from '@/features/logistics/delivery-runs.hooks'
 import type {
@@ -961,6 +963,8 @@ function RunDetails({ id, onClose, onDeparted, readOnly = false }: { id: number;
   const changeTransfers = useChangeRunTransfers()
   const reopen = useReopenRunMember()
   const cancelMember = useCancelRunMember()
+  const cancelTransfer = useCancelRunTransfer()
+  const [cancelTransferTarget, setCancelTransferTarget] = useState<{ id: number; transferNumber: string; revision: number; runRevision: number }>()
   const cancelRun = useCancelDeliveryRun()
   const [editing, setEditing] = useState<DeliveryRunRecord>()
   const [dispatching, setDispatching] = useState(false)
@@ -984,7 +988,7 @@ function RunDetails({ id, onClose, onDeparted, readOnly = false }: { id: number;
   }>()
   const memberBusy =
     acting ||
-    [changeMembers, changeTransfers, reopen, cancelMember, cancelRun].some((mutation) => mutation.isPending)
+    [changeMembers, changeTransfers, reopen, cancelMember, cancelTransfer, cancelRun].some((mutation) => mutation.isPending)
   const busy = memberBusy || adding
   const resultsBlocked = busy || review || query.isFetching || query.isError
   async function perform(action: () => Promise<unknown>) {
@@ -1202,6 +1206,8 @@ function RunDetails({ id, onClose, onDeparted, readOnly = false }: { id: number;
                       onClick={() => void perform(async () => {
                         await changeTransfers.mutateAsync({ id, payload: { expectedRevision: run.revision, remove: [{ transferId: row.id, expectedRevision: row.revision }] } })
                       }).catch(() => undefined)}>Remove from Trip</Button>}
+                    {canManage && run.status === 'DRAFT' && row.status === 'DRAFT' && <Button variant="ghost" size="sm" disabled={resultsBlocked}
+                      onClick={() => setCancelTransferTarget({ id: row.id, transferNumber: row.transferNumber, revision: row.revision, runRevision: run.revision })}>Cancel Transfer</Button>}
                   </div> },
                 ]} />
               </section>}
@@ -1301,6 +1307,24 @@ function RunDetails({ id, onClose, onDeparted, readOnly = false }: { id: number;
               : saved.run.status === 'COMPLETED' ? 'This trip is completed.' : 'No deliveries are awaiting results. Review the trip status.'}`)
           }}
           onClose={() => setReconcileId(undefined)}
+        />
+      )}
+      {!readOnly && cancelTransferTarget && (
+        <CancelRunTransferDialog
+          transferNumber={cancelTransferTarget.transferNumber}
+          onClose={() => setCancelTransferTarget(undefined)}
+          onConfirm={async (reason) => {
+            await perform(() => cancelTransfer.mutateAsync({
+              id,
+              transferId: cancelTransferTarget.id,
+              payload: {
+                expectedRunRevision: cancelTransferTarget.runRevision,
+                expectedTransferRevision: cancelTransferTarget.revision,
+                reason,
+              },
+            }))
+            toast.success('Transfer cancelled and removed from this trip.')
+          }}
         />
       )}
       <ConfirmDeleteModal

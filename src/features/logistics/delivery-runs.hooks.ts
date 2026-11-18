@@ -5,13 +5,13 @@ import {
   cancelDeliveryRunApi, cancelRunMemberApi, changeRunMembersApi, createDeliveryRunApi,
   dispatchDeliveryRunApi, fetchDeliveryRunByIdApi, fetchDeliveryRunsPageApi,
   reconcileRunMemberApi, reopenRunMemberApi, updateDeliveryRunDraftApi,
-  changeRunTransfersApi,
+  changeRunTransfersApi, cancelRunTransferApi,
 } from './delivery-runs.api'
 import type {
   ChangeRunMembersPayload, CreateDeliveryRunPayload, DeliveryRunFilter, DeliveryRunRecord,
   DispatchDeliveryRunPayload, ReconcileRunMemberPayload, RunMemberActionPayload,
   RunMemberReconciliationResponse, UpdateDeliveryRunDraftPayload,
-  ChangeRunTransfersPayload,
+  ChangeRunTransfersPayload, RunTransferCancelPayload,
 } from './delivery-runs.types'
 
 export const DELIVERY_RUNS_QUERY_KEY = ['delivery-runs'] as const
@@ -66,6 +66,9 @@ export function useChangeRunMembers() {
 }
 export function useChangeRunTransfers() {
   return useRunMutation(({ id, payload }: { id: number; payload: ChangeRunTransfersPayload }) => changeRunTransfersApi(id, payload))
+}
+export function useCancelRunTransfer() {
+  return useRunMutation(({ id, transferId, payload }: { id: number; transferId: number; payload: RunTransferCancelPayload }) => cancelRunTransferApi(id, transferId, payload))
 }
 export function useReopenRunMember() {
   return useRunMutation(({ id, deliveryId, payload }: { id: number; deliveryId: number; payload: RunMemberActionPayload }) => reopenRunMemberApi(id, deliveryId, payload))

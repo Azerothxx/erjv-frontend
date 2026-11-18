@@ -82,6 +82,10 @@ html {
   --color-status-warning-foreground: var(--status-warning-foreground);
   --color-status-success: var(--status-success);
   --color-status-success-foreground: var(--status-success-foreground);
+  --color-status-progress: var(--status-progress);
+  --color-status-progress-foreground: var(--status-progress-foreground);
+  --color-status-partial: var(--status-partial);
+  --color-status-partial-foreground: var(--status-partial-foreground);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -129,6 +133,10 @@ html {
   --status-warning-foreground: #855a18;
   --status-success: #edf5f0;
   --status-success-foreground: #336e4d;
+  --status-progress: #f1edf8;
+  --status-progress-foreground: #5b4a8a;
+  --status-partial: #e8f4f3;
+  --status-partial-foreground: #2f6b66;
   --radius: 0.5rem;
 }
 
@@ -162,6 +170,10 @@ html {
   --status-warning-foreground: #dfc08c;
   --status-success: #202f27;
   --status-success-foreground: #a6ceb4;
+  --status-progress: #2a2538;
+  --status-progress-foreground: #c6b9e6;
+  --status-partial: #1f3331;
+  --status-partial-foreground: #9fd3cd;
 }
 
 :root,

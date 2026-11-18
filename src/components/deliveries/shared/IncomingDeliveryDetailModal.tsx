@@ -1,6 +1,7 @@
 import { LastEditedBy } from '@/components/common/LastEditedBy'
 import { useRef, useState } from 'react'
 import { IncomingIssueCorrection } from '../IncomingIssueCorrection'
+import { RescheduleIncomingForm } from '../RescheduleIncomingForm'
 import { DeliveryDetailFooter } from './DeliveryDetailFooter'
 import type { Warehouse } from '@/features/logistics/warehouses.types'
 import { ProductTableLabel, ProductTableQuantity } from '@/components/common/ProductTableCells'
@@ -75,7 +76,8 @@ export function IncomingDeliveryDetailModal({
     delivery: IncomingDeliveryRecord
     target: 'warehouse' | 'schedule'
   } | null>(null)
-  const editing = !!editContext
+  const [rescheduling, setRescheduling] = useState(false)
+  const editing = !!editContext || rescheduling
   const [correctionPending, setCorrectionPending] = useState(false)
   const [reviewedDeliveryId, setReviewedDeliveryId] = useState<number>()
   const [reviewError, setReviewError] = useState('')
@@ -251,9 +253,35 @@ export function IncomingDeliveryDetailModal({
                 </Alert>
               )}
               {delivery.status === 'SCHEDULED' && (
-                <p className="text-sm text-muted-foreground">
-                  Arrival scheduled. Use Receive Goods in the delivery table when the supplier arrives.
-                </p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="text-sm text-muted-foreground">
+                    Arrival scheduled. Use Receive Goods in the delivery table when the supplier arrives.
+                    {canManage && ' If the date or warehouse changes, reschedule it here instead of cancelling.'}
+                  </p>
+                  {canManage && !rescheduling && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      disabled={refreshing || !!refreshError}
+                      onClick={() => setRescheduling(true)}
+                    >
+                      Reschedule Arrival
+                    </Button>
+                  )}
+                </div>
+              )}
+              {rescheduling && canManage && delivery.status === 'SCHEDULED' && (
+                <RescheduleIncomingForm
+                  delivery={delivery}
+                  currentRevision={delivery.revision}
+                  warehouses={warehouses}
+                  onSaved={async () => {
+                    await onRefresh?.()
+                    setRescheduling(false)
+                  }}
+                  onBusyChange={setCorrectionPending}
+                  onCancel={() => setRescheduling(false)}
+                />
               )}
               {schedulingIssue && (
                 <Alert ref={issueRef} tabIndex={-1} aria-label="Delivery issue">

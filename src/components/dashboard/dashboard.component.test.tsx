@@ -374,11 +374,12 @@ it('initially shows four tasks and reveals more loaded records without extra req
   showTasks = extraOutgoing = true
   mount()
   const attention = screen.getByRole('region', { name: 'Needs Attention' })
-  await within(attention).findByText('Showing 4 of 6 loaded tasks.')
+  await within(attention).findByText('Show 2 more tasks')
   expect(within(attention).getAllByRole('listitem')).toHaveLength(4)
   expect(within(attention).queryByRole('link', { name: /OUT-50/ })).toBeNull()
   const before = requests.length
-  await userEvent.setup().click(within(attention).getByRole('button', { name: 'Show more tasks' }))
+  const user = userEvent.setup()
+  await user.click(within(attention).getByText('Show 2 more tasks'))
   expect(within(attention).getAllByRole('listitem')).toHaveLength(6)
   expect(
     within(attention)
@@ -386,5 +387,7 @@ it('initially shows four tasks and reveals more loaded records without extra req
       .getAttribute('href'),
   ).toBe('/deliveries/outgoing')
   expect(requests).toHaveLength(before)
-  expect(within(attention).queryByRole('button', { name: 'Show more tasks' })).toBeNull()
+  await user.click(within(attention).getByText('Show fewer tasks'))
+  expect(within(attention).getAllByRole('listitem')).toHaveLength(4)
+  expect(within(attention).getByText('Show 2 more tasks')).toBeTruthy()
 })

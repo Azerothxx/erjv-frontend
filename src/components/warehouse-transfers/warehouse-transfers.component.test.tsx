@@ -154,7 +154,7 @@ it.each([
   expect(badge.classList.contains('whitespace-nowrap')).toBe(true)
   expect(badge.classList.contains('min-w-max')).toBe(true)
   expect(badge.classList.contains('w-fit')).toBe(true)
-  expect(badge.classList.contains('bg-muted')).toBe(true)
+  expect(badge.classList.contains({ DRAFT: 'bg-muted', DISPATCHED: 'bg-status-warning', COMPLETED: 'bg-status-success', CANCELLED: 'bg-destructive/10' }[status])).toBe(true)
   expect(badge.querySelector('[data-slot="status-dot"]')).toBeTruthy()
   expect(text.closest('td')?.classList.contains('min-w-32')).toBe(true)
   expect(screen.getByRole('columnheader', { name: 'Status' }).classList.contains('min-w-32')).toBe(true)

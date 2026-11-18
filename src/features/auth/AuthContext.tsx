@@ -13,6 +13,7 @@ type AuthContextType = {
   isAuthenticated: boolean
   isLoading: boolean
   isAdmin: boolean
+  isSuperAdmin: boolean
   isManager: boolean
   isStaff: boolean
   canManageStaff: boolean
@@ -297,6 +298,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const userRecord = user as unknown as Record<string, unknown> | null
   const userRole = normalizeUserRole(user?.role || userRecord?.userRole || userRecord?.roleName)
   const isAdmin = userRole === USER_ROLES.ADMIN || userRole === USER_ROLES.SUPERADMIN
+  const isSuperAdmin = userRole === USER_ROLES.SUPERADMIN
   const isManager = userRole === USER_ROLES.MANAGER
   const isStaff = userRole === USER_ROLES.STAFF
   const canManageStaff = isAdmin || isManager
@@ -314,6 +316,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isAuthenticated: !!user,
         isLoading,
         isAdmin,
+        isSuperAdmin,
         isManager,
         isStaff,
         canManageStaff,

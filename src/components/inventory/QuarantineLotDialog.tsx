@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/select'
 import { useAuth } from '@/features/auth/AuthContext'
 import {
+  useApproveOverage,
   useCorrectQuarantineCondition,
   useQuarantineLot,
   useQuarantineConditionChanges,
@@ -63,6 +64,7 @@ const choices = [
 const conditionLabels: Record<QuarantineCondition, string> = {
   DAMAGED: 'Damaged',
   SPOILED: 'Spoiled',
+  OVERAGE: 'Overage',
 }
 const sourceLabels: Record<QuarantineLot['sourceKind'], string> = {
   MANUAL: 'Manual',
@@ -98,6 +100,7 @@ export function QuarantineLotDialog({
   const canManage = isAdmin || isManager
   const correct = useCorrectQuarantineCondition()
   const resolve = useResolveQuarantine()
+  const approveOverage = useApproveOverage()
   const [action, setAction] = useState<Action | null>(null)
   const [condition, setCondition] = useState<QuarantineCondition>(selectedLot.condition)
   const [drafts, setDrafts] = useState<Record<Action, { quantity: string; reason: string }>>({
@@ -134,7 +137,21 @@ export function QuarantineLotDialog({
   const [uncertain, setUncertain] = useState(false)
   const [checking, setChecking] = useState(false)
   const inFlight = useRef(false)
-  const pending = checking || correct.isPending || resolve.isPending
+  const pending = checking || correct.isPending || resolve.isPending || approveOverage.isPending
+  // Overage lots are extra goods received beyond the order; the backend only releases them through Approve Overage.
+  const isOverage = lot?.condition === 'OVERAGE'
+  const visibleChoices = choices
+    .filter((choice) => !(isOverage && choice.value === 'CORRECT'))
+    .map((choice) =>
+      isOverage && choice.value === 'CLEAR'
+        ? {
+            ...choice,
+            label: 'Approve Overage',
+            description: 'Accept the extra goods received into available stock.',
+          }
+        : choice,
+    )
+  const clearLabel = isOverage ? 'Approve Overage' : 'Release Stock'
   const remaining = lot ? parseStockCents(lot.remainingQuantity) : null
   const isOpen = remaining !== null && remaining > 0n
   const unit = stock?.inventoryItem.unit ?? ''
@@ -193,7 +210,7 @@ export function QuarantineLotDialog({
     actionRequirements.length > 0
       ? `To enable ${
           action === 'CLEAR'
-            ? 'Release Stock'
+            ? clearLabel
             : action === 'REMOVE'
               ? 'Review Removal'
               : 'Save Correction'
@@ -274,6 +291,16 @@ export function QuarantineLotDialog({
             requestId: command.payload.requestId,
           },
         })
+      else if (action === 'CLEAR' && isOverage)
+        await approveOverage.mutateAsync({
+          id: current.id,
+          payload: {
+            quantity: command.payload.quantity,
+            reason: command.payload.reason,
+            expectedRevision: command.payload.expectedRevision,
+            requestId: command.payload.requestId,
+          },
+        })
       else
         await resolve.mutateAsync({
           id: current.id,
@@ -289,7 +316,9 @@ export function QuarantineLotDialog({
         action === 'CORRECT'
           ? 'Stock condition corrected. Goods remain quarantined.'
           : action === 'CLEAR'
-            ? 'Quarantined goods released to available stock.'
+            ? isOverage
+              ? 'Overage approved and added to available stock.'
+              : 'Quarantined goods released to available stock.'
             : 'Quarantined goods removed from inventory.',
       )
       setDrafts((previous) => ({ ...previous, [action]: { quantity: '', reason: '' } }))
@@ -315,7 +344,7 @@ export function QuarantineLotDialog({
     event.preventDefault()
     void apply()
   }
-  const quantityLabel = action === 'CLEAR' ? 'Quantity to release' : 'Quantity to remove'
+  const quantityLabel = action === 'CLEAR' ? (isOverage ? 'Quantity to approve' : 'Quantity to release') : 'Quantity to remove'
   return (
     <>
       <Dialog open onOpenChange={(next) => !next && requestClose()}>
@@ -538,7 +567,7 @@ export function QuarantineLotDialog({
                         aria-labelledby="quarantine-action-label"
                         className="flex flex-col gap-2"
                       >
-                        {choices.map(({ value, label, description, icon: Icon }) => (
+                        {visibleChoices.map(({ value, label, description, icon: Icon }) => (
                           <label key={value} className="min-w-0 cursor-pointer">
                             <input
                               type="radio"
@@ -653,8 +682,9 @@ export function QuarantineLotDialog({
                               }
                               className="mt-0.5 size-4 shrink-0"
                             />
-                            I confirm these goods have been inspected and are safe to return to
-                            available stock.
+                            {isOverage
+                              ? 'I confirm the extra goods have been counted and may be added to available stock.'
+                              : 'I confirm these goods have been inspected and are safe to return to available stock.'}
                           </Label>
                         )}
                         {actionGuidance && (
@@ -687,7 +717,7 @@ export function QuarantineLotDialog({
                 {pending
                   ? 'Checking and saving...'
                   : action === 'CLEAR'
-                    ? 'Release Stock'
+                    ? clearLabel
                     : action === 'REMOVE'
                       ? 'Review Removal'
                       : 'Save Correction'}

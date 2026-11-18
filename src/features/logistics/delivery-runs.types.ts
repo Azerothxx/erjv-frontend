@@ -81,6 +81,11 @@ export interface ChangeRunMembersPayload {
   add?: RunMemberRevision[]
   remove?: RunMemberRevision[]
 }
+export interface RunTransferCancelPayload {
+  expectedRunRevision: number
+  expectedTransferRevision: number
+  reason: string
+}
 export interface RunMemberActionPayload {
   expectedRunRevision: number
   expectedDeliveryRevision: number
