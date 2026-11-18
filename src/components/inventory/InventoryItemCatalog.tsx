@@ -688,8 +688,8 @@ function ProductLocations({ product, warningScope, warningLocations, focusTarget
         id={`inventory-locations-${product.id}`}
         title="Stock by location"
         ariaLabel={`Stock by location for ${String(product.name ?? 'product')}`}
-        isLoading={query.isFetching}
-        isEmpty={!query.isFetching && !query.isError && allocations.length === 0}
+        isLoading={query.isLoading}
+        isEmpty={!query.isLoading && !query.isError && allocations.length === 0}
         emptyContent="No stock records at this location."
         errorContent={query.isError ? <p role="alert">Stock locations could not be loaded. <Button variant="link" onClick={() => void query.reload()}>Retry locations</Button></p> : undefined}
       >

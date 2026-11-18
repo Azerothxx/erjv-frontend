@@ -368,7 +368,7 @@ export function WarehouseTransfersPage({ view = 'active' }: { view?: 'active' | 
             onRowClick={openDetails}
             pagination={false}
             manualSorting
-            isLoading={query.isFetching}
+            isLoading={query.isLoading}
             emptyContent={
               <div className="py-2 text-center">
                 <p className="text-sm font-semibold">

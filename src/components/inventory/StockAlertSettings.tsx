@@ -199,7 +199,7 @@ export function StockAlertSettings({ onClose }: { onClose: () => void }) {
               data={stock.items ?? []}
               columns={columns}
               getRowKey={(row) => row.id}
-              isLoading={warehouses.isLoading || stock.isFetching}
+              isLoading={warehouses.isLoading || stock.isLoading}
               loadingMessage="Loading stock alert settings…"
               pagination={false}
               manualSorting
