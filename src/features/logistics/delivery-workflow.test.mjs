@@ -193,10 +193,10 @@ test('only inspected backend transitions are exposed for each direction', () => 
 })
 
 test('active dates are compact, history retains year, expected dates do not invent times', () => {
-  const active = formatDeliverySchedule('2026-10-11T14:30:00', false)
+  const active = formatDeliverySchedule('2026-10-11T14:30:00+08:00', false)
   assert.equal(active.date, '11 Oct 2026')
   assert.equal(active.time, '14:30')
-  assert.equal(formatDeliverySchedule('2026-10-11T14:30:00', true).date, '11 Oct 2026')
+  assert.equal(formatDeliverySchedule('2026-10-11T14:30:00+08:00', true).date, '11 Oct 2026')
   assert.equal(formatDeliverySchedule('2026-10-11', false, false).time, 'Expected')
   for (const value of [null, 'bad-date'])
     assert.equal(formatDeliverySchedule(value, false).date, 'Not scheduled')

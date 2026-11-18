@@ -1218,9 +1218,9 @@
     "semantic_hash": "fc4ebee76895a68ec581df4daa6fcae6"
   },
   "src/features/logistics/delivery-workflow.test.mjs": {
-    "mtime": 1794593309.0719936,
-    "seen": 1794594090.2375643,
-    "ast_hash": "d05fd0001f8080d2d8bf59b18599bf5a",
+    "mtime": 1795024367.292418,
+    "seen": 1795024468.0293622,
+    "ast_hash": "a09f449df5222d1eb689532e80e86abe",
     "semantic_hash": ""
   },
   "src/features/logistics/delivery-workflow.ts": {
@@ -7833,6 +7833,12 @@
     "mtime": 1795011183.0328424,
     "seen": 1795012981.0739698,
     "ast_hash": "65ef936a259fe0bfcdae6e70b643cf8b",
+    "semantic_hash": ""
+  },
+  ".github/workflows/frontend-ci.yml": {
+    "mtime": 1795024005.5916755,
+    "seen": 1795024467.894898,
+    "ast_hash": "00b7988aac32e9d70020b4a871dcd422",
     "semantic_hash": ""
   },
   "package-lock.json": {
