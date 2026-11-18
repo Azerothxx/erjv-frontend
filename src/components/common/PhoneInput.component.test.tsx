@@ -42,19 +42,23 @@ it.each([false, true])(
     expect(save).toHaveBeenCalledTimes(required ? 0 : 1)
     await userEvent.type(screen.getByLabelText('Phone number'), '9171234567')
     await userEvent.click(screen.getByRole('button', { name: 'Save' }))
-    expect(save).toHaveBeenLastCalledWith('09171234567')
+    expect(save).toHaveBeenLastCalledWith('+639171234567')
   },
 )
 
-it.each(['91712345678', '917abc1234567', '91712'])(
-  'retains and rejects invalid mobile input %s without truncation',
-  async (value) => {
+it.each([
+  ['91712345678', '', 'Enter 10 digits after +63.'],
+  ['917abc1234567', '', 'Enter a valid Philippine mobile number.'],
+  ['91712', '91712', 'Enter 10 digits after +63.'],
+])(
+  'rejects invalid mobile input %s without manufacturing a valid number',
+  async (value, displayed, message) => {
     const save = mount()
     fireEvent.change(screen.getByLabelText('Phone number'), { target: { value } })
     await userEvent.click(screen.getByRole('button', { name: 'Save' }))
     expect(save).not.toHaveBeenCalled()
-    expect((screen.getByLabelText('Phone number') as HTMLInputElement).value).toBe(value)
-    expect(screen.getByRole('alert').textContent).toContain('10 mobile digits')
+    expect((screen.getByLabelText('Phone number') as HTMLInputElement).value).toBe(displayed)
+    expect(screen.getByRole('alert').textContent).toBe(message)
   },
 )
 

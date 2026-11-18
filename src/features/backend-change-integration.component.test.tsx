@@ -28,7 +28,7 @@ function context() {
   return { client, wrapper }
 }
 
-it.each([[], [2, 2], [0], [-1], [1.5], [Number.NaN]].map((jobIds) => ({ jobIds })))(
+it.each([[2, 2], [0], [-1], [1.5], [Number.NaN], [Number.MAX_SAFE_INTEGER + 1]].map((jobIds) => ({ jobIds })))(
   'rejects invalid replacement job IDs $jobIds without any HTTP or deletion',
   async ({ jobIds }) => {
     const request = vi.fn(async (config) => ({
@@ -171,8 +171,8 @@ it('shows the stored accepted quantity after quarantine clearance in receipt det
     }),
   )
   expect(screen.getByRole('columnheader', { name: 'Accepted' })).toBeTruthy()
-  expect(screen.getByRole('cell', { name: '2.50' })).toBeTruthy()
-  expect(screen.getByRole('columnheader', { name: 'Damaged at receipt' })).toBeTruthy()
+  expect(screen.getByRole('cell', { name: '2.5 Unit unavailable' })).toBeTruthy()
+  expect(screen.getByRole('columnheader', { name: 'Damaged' })).toBeTruthy()
 })
 
 it('does not show receipt quantities before an incoming delivery is confirmed', () => {
@@ -233,7 +233,7 @@ it('does not show receipt quantities before an incoming delivery is confirmed', 
     'Product',
     'Expected',
   ])
-  expect(screen.getByRole('cell', { name: '2.00' })).toBeTruthy()
+  expect(screen.getByRole('cell', { name: '2 Unit unavailable' })).toBeTruthy()
   expect(screen.queryByRole('columnheader', { name: 'Received' })).toBeNull()
   expect(screen.queryByRole('columnheader', { name: 'Accepted' })).toBeNull()
   expect(screen.queryByRole('columnheader', { name: 'Damaged' })).toBeNull()

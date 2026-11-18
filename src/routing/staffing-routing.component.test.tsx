@@ -143,10 +143,12 @@ it('navigates HR and other modules with browser history while preserving sidebar
     'User Roles & Access',
     'Customers',
     'Purchase Orders',
-    'Inventory',
+    'Products & Stock',
   ]) {
+    if (title === 'Products & Stock')
+      await user.click(within(navigation).getByRole('button', { name: 'Inventory' }))
     await user.click(within(navigation).getByRole('link', { name: title }))
-    await screen.findByRole('heading', { name: title })
+    await screen.findByRole('heading', { name: title === 'Products & Stock' ? 'Inventory' : title })
     expect(screen.getByRole('navigation', { name: 'Main navigation' })).toBe(navigation)
     expect(header.isConnected).toBe(true)
   }

@@ -63,19 +63,20 @@ afterEach(() => {
   apiClient.defaults.adapter = originalAdapter
 })
 
-it('routes transfer History separately and preserves browser back to active transfers', async () => {
-  mount('/warehouse-transfers')
-  await screen.findByRole('heading', { name: 'Warehouse Transfers' })
-  await userEvent.click(screen.getByRole('link', { name: 'History' }))
+it('opens transfer History directly and preserves browser back after returning to active transfers', async () => {
+  mount('/warehouse-transfers/history')
   await screen.findByRole('heading', { name: 'Warehouse Transfer History' })
   expect(screen.getByTestId('path').textContent).toBe('/warehouse-transfers/history')
   expect(screen.getByRole('link', { name: 'Active Transfers' }).getAttribute('href')).toBe(
     '/warehouse-transfers',
   )
   expect(screen.queryByRole('button', { name: 'Create Transfer' })).toBeNull()
-  await userEvent.click(screen.getByRole('button', { name: 'Browser back' }))
+  await userEvent.click(screen.getByRole('link', { name: 'Active Transfers' }))
   await screen.findByRole('heading', { name: 'Warehouse Transfers' })
   expect(screen.getByTestId('path').textContent).toBe('/warehouse-transfers')
+  await userEvent.click(screen.getByRole('button', { name: 'Browser back' }))
+  await screen.findByRole('heading', { name: 'Warehouse Transfer History' })
+  expect(screen.getByTestId('path').textContent).toBe('/warehouse-transfers/history')
 })
 
 function mount(path: string) {

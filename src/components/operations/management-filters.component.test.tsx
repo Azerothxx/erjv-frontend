@@ -15,7 +15,7 @@ afterEach(() => {
   apiClient.defaults.adapter = originalAdapter
 })
 
-it('keeps filtered staff visible during refresh and reveals the full address on focus', async () => {
+it('keeps searched staff visible during refresh and reveals the full address on focus', async () => {
   let hold = false
   let release!: () => void
   let refreshStarted = false
@@ -58,10 +58,7 @@ it('keeps filtered staff visible during refresh and reveals the full address on 
   act(() => name.focus())
   expect(screen.getByRole('tooltip').textContent).toContain('Full warehouse address')
   const user = userEvent.setup()
-  await user.click(screen.getByRole('button', { name: 'Filters' }))
-  await user.click(screen.getByRole('combobox', { name: 'Driving eligibility' }))
-  await user.click(screen.getByRole('option', { name: 'Can drive' }))
-  await user.click(screen.getByRole('button', { name: 'Done' }))
+  await user.type(screen.getByRole('textbox', { name: 'Search staff' }), 'Alex')
   await screen.findByText('Alex Cruz')
   hold = true
   let refresh!: Promise<void>
@@ -71,7 +68,7 @@ it('keeps filtered staff visible during refresh and reveals the full address on 
   await waitFor(() => expect(refreshStarted).toBe(true))
   expect(screen.getByText('Alex Cruz')).toBeTruthy()
   expect(screen.queryByText('Loading employee directory...')).toBeNull()
-  expect(screen.getByRole('button', { name: 'Clear driving eligibility' })).toBeTruthy()
+  expect((screen.getByRole('textbox', { name: 'Search staff' }) as HTMLInputElement).value).toBe('Alex')
   await act(async () => {
     release()
     await refresh
@@ -83,11 +80,11 @@ it.each([
     name: 'staff',
     ui: <EmployeeList />,
     path: '/employees',
-    label: 'Driving eligibility',
-    option: 'Can drive',
-    param: 'canDrive',
-    value: 'true',
-    clear: 'Clear driving eligibility',
+    label: '',
+    option: 'Archived Staff',
+    param: 'includeInactive',
+    value: 'only',
+    clear: 'Back to Active',
   },
   {
     name: 'vehicles',
@@ -129,14 +126,18 @@ it.each([
     await waitFor(() => expect(reads.at(-1)?.params.q).toBe('Harbor'))
     await user.click(screen.getByRole('button', { name: 'Next page' }))
     await waitFor(() => expect(reads.at(-1)?.params.cursor).toBe('page-2'))
-    await user.click(screen.getByRole('button', { name: 'Filters' }))
-    await user.click(screen.getByRole('combobox', { name: label }))
-    await user.click(screen.getByRole('option', { name: option }))
+    if (param === 'includeInactive') {
+      await user.click(screen.getByRole('button', { name: option }))
+    } else {
+      await user.click(screen.getByRole('button', { name: 'Filters' }))
+      await user.click(screen.getByRole('combobox', { name: label }))
+      await user.click(screen.getByRole('option', { name: option }))
+    }
     await waitFor(() => expect(reads.at(-1)?.url).toBe(expectedPath))
     if (param) await waitFor(() => expect(reads.at(-1)?.params[param]).toBe(value))
     expect(reads.at(-1)?.params.cursor).toBeUndefined()
     expect(reads.at(-1)?.params.q).toBe('Harbor')
-    await user.click(screen.getByRole('button', { name: 'Done' }))
+    if (!param) await user.click(screen.getByRole('button', { name: 'Done' }))
     await user.click(screen.getByRole('button', { name: clear }))
     await waitFor(() => expect(screen.getByText(/Page 1/)).toBeTruthy())
     expect(

@@ -205,9 +205,9 @@ it('shows purchase partial receipt and damaged quantities without claiming compl
   expect(within(dialog).getByText('Partially Received')).toBeTruthy()
   await userEvent.click(await within(dialog).findByText('Accepted and damaged quantities'))
   expect(await within(dialog).findByRole('columnheader', { name: 'Damaged' })).toBeTruthy()
-  expect(within(dialog).getByRole('cell', { name: '2' })).toBeTruthy()
-  expect(within(dialog).getByRole('cell', { name: '3' })).toBeTruthy()
-  expect(within(dialog).getByRole('cell', { name: '7' })).toBeTruthy()
+  expect(within(dialog).getByRole('cell', { name: '2 kg' })).toBeTruthy()
+  expect(within(dialog).getByRole('cell', { name: '3 kg' })).toBeTruthy()
+  expect(within(dialog).getByRole('cell', { name: '7 kg' })).toBeTruthy()
 })
 
 it('keeps partial sales progress authoritative even with another delivery in transit', async () => {

@@ -161,7 +161,7 @@ it('labels confirmed availability without confusing physical stock, missing assi
   expect(within(empty).getByText('0')).toBeTruthy()
   expect(empty.className).toContain('bg-destructive/5')
   const unassigned = screen.getByRole('row', { name: /Unassigned Rice/ })
-  expect(within(unassigned).getByText('No Warehouse Assigned')).toBeTruthy()
+  expect(within(unassigned).getByText('0 Warehouses')).toBeTruthy()
   expect(within(unassigned).queryByText('Out of Stock')).toBeNull()
   expect(
     within(screen.getByRole('row', { name: /Unknown Rice/ })).getByText('Stock Unavailable'),

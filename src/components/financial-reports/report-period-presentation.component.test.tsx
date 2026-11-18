@@ -144,15 +144,19 @@ it('shows exact values on keyboard and pointer with one chart tab stop', async (
   await user.keyboard('{ArrowDown}')
   await waitFor(() => expect(screen.getByRole('status').textContent).toContain('Purchases'))
   const point = container.querySelector('circle[data-series="sales"][data-point-key="2024-02-01"]')!
-  fireEvent.mouseEnter(point)
+  const bounds = { left: 0, top: 0, width: 880, height: 220 }
+  Object.defineProperty(chart, 'getBoundingClientRect', { value: () => bounds })
+  fireEvent.mouseMove(chart, {
+    clientX: Number(point.getAttribute('cx')),
+    clientY: Number(point.getAttribute('cy')),
+  })
   await waitFor(() => {
     expect(screen.getByRole('status').textContent).toContain('February 1, 2024')
     expect(screen.getByRole('status').textContent).toContain('₱1.00')
   })
   await user.keyboard('{Escape}')
-  expect(screen.getByRole('status').textContent).toBe(
-    'Hover or focus the chart to inspect exact amounts.',
-  )
+  expect(screen.getByRole('status').textContent).toBe('')
+  expect(screen.queryByTestId('trend-chart-tooltip')).toBeNull()
 })
 
 it('uses consistent solid financial series without exact-data controls', () => {

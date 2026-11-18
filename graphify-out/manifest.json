@@ -366,9 +366,9 @@
     "semantic_hash": ""
   },
   "src/components/inventory/quarantine.component.test.tsx": {
-    "mtime": 1795011245.8894,
-    "seen": 1795012980.968744,
-    "ast_hash": "9d8787168b4517687342f79dc4aa5db3",
+    "mtime": 1795022182.4216795,
+    "seen": 1795023084.8701742,
+    "ast_hash": "967561a44799aba80d39bb08c9710692",
     "semantic_hash": ""
   },
   "src/components/inventory/stock-alert-settings.component.test.tsx": {
@@ -1890,15 +1890,15 @@
     "semantic_hash": ""
   },
   "src/routing/logistics-routing.component.test.tsx": {
-    "mtime": 1794426314.577657,
-    "seen": 1794426629.9904299,
-    "ast_hash": "d83ccc84cdffc6c465f0faf7c35753a1",
+    "mtime": 1795022178.4062521,
+    "seen": 1795023084.9709334,
+    "ast_hash": "2411ba25a416097afbeae69d0b7daaaf",
     "semantic_hash": ""
   },
   "src/routing/staffing-routing.component.test.tsx": {
-    "mtime": 1794142444.6167068,
-    "seen": 1794142490.9707081,
-    "ast_hash": "e49998d5bcb190954774550f2f8c6ed7",
+    "mtime": 1795022446.5179496,
+    "seen": 1795023084.9709387,
+    "ast_hash": "002916fa260044fe96aab6e1234b7ea0",
     "semantic_hash": ""
   },
   "src/test/component-setup.ts": {
@@ -1962,9 +1962,9 @@
     "semantic_hash": ""
   },
   "src/components/financial-reports/report-period-presentation.component.test.tsx": {
-    "mtime": 1793808124.446146,
-    "seen": 1793808376.9841893,
-    "ast_hash": "699483d024955a19e0130ac1779c1d0d",
+    "mtime": 1795022359.12041,
+    "seen": 1795023084.8634481,
+    "ast_hash": "2cc6b49a789d1f6d7564ed49da4beb20",
     "semantic_hash": ""
   },
   "src/components/financial-reports/report-summary-details.component.test.tsx": {
@@ -3558,9 +3558,9 @@
     "semantic_hash": ""
   },
   "vitest.config.ts": {
-    "mtime": 1791705311.0693731,
-    "seen": 1793724723.9466767,
-    "ast_hash": "88d047eeed6b53ce707baf6dc5c51c0f",
+    "mtime": 1795023036.2765853,
+    "seen": 1795023084.9809725,
+    "ast_hash": "bc1de5d066e53872d29c2af32378c152",
     "semantic_hash": ""
   },
   ".agents/rules/ERJVPOS_FRONTEND_INSTRUCTIONS.md": {
@@ -6792,9 +6792,9 @@
     "semantic_hash": ""
   },
   "src/features/form-submission.component.test.tsx": {
-    "mtime": 1793804227.2774928,
-    "seen": 1793804571.5142756,
-    "ast_hash": "98a4e5bae4e886716760dbcc491df5b8",
+    "mtime": 1795022355.7221096,
+    "seen": 1795023084.9259443,
+    "ast_hash": "7a8d61c824ed0d640dae122c60e659b2",
     "semantic_hash": ""
   },
   "src/components/deliveries/shared/ERJVPOS_UX_FRAMEWORK.md": {
@@ -6870,9 +6870,9 @@
     "semantic_hash": ""
   },
   "src/features/backend-change-integration.component.test.tsx": {
-    "mtime": 1795011183.0843096,
-    "seen": 1795012980.9985094,
-    "ast_hash": "8e6a68c84b495a46689f7a42b29b46a8",
+    "mtime": 1795022354.0705395,
+    "seen": 1795023084.9162593,
+    "ast_hash": "852083066861648c27a765552b3986ae",
     "semantic_hash": ""
   },
   "verification/backend-changes.test.cjs": {
@@ -6894,9 +6894,9 @@
     "semantic_hash": ""
   },
   "src/components/inventory/inventory-stock-status.component.test.tsx": {
-    "mtime": 1793910802.8511245,
-    "seen": 1793910838.1612003,
-    "ast_hash": "8179117647bcba378de1bff351450649",
+    "mtime": 1795022175.2953262,
+    "seen": 1795023084.868867,
+    "ast_hash": "68a9d6bfffa2660cb0eb1de820a9f805",
     "semantic_hash": ""
   },
   "src/components/inventory/warehouse-refresh.component.test.tsx": {
@@ -6930,9 +6930,9 @@
     "semantic_hash": ""
   },
   "src/components/operations/management-filters.component.test.tsx": {
-    "mtime": 1793909456.571801,
-    "seen": 1793909559.32112,
-    "ast_hash": "28aa326c07060820c187431899c7adb5",
+    "mtime": 1795022214.6310658,
+    "seen": 1795023084.8787653,
+    "ast_hash": "fb6146f2eb17e663f8e2d9209dff0091",
     "semantic_hash": ""
   },
   "src/components/warehouse-transfers/TransferProductCatalog.tsx": {
@@ -7050,9 +7050,9 @@
     "semantic_hash": ""
   },
   "src/components/orders/order-records.component.test.tsx": {
-    "mtime": 1794425430.522921,
-    "seen": 1794426013.0640628,
-    "ast_hash": "90003f58887e63273685af5aca710564",
+    "mtime": 1795022173.7414837,
+    "seen": 1795023084.8873274,
+    "ast_hash": "690f0ba36209cc3785d517093741257a",
     "semantic_hash": ""
   },
   "src/components/orders/shared/OrderDetailFooter.tsx": {
@@ -7158,9 +7158,9 @@
     "semantic_hash": ""
   },
   "src/components/common/PhoneInput.component.test.tsx": {
-    "mtime": 1794428832.8773122,
-    "seen": 1794429614.4007442,
-    "ast_hash": "5112b88a6b37b9105c4e3d4fa6ba95e1",
+    "mtime": 1795022170.611995,
+    "seen": 1795023084.8361166,
+    "ast_hash": "fac7e8e37f86152806814231e35b5ebc",
     "semantic_hash": ""
   },
   "src/components/common/PhoneInput.tsx": {

@@ -135,7 +135,7 @@ function mount(
 }
 
 async function openLot() {
-  fireEvent.click(await screen.findByRole('button', { name: 'Review & Resolve' }))
+  fireEvent.click(await screen.findByRole('button', { name: 'Review Stock' }))
   await screen.findByText('Originally reported condition')
   return screen.getByRole('dialog')
 }
@@ -199,7 +199,7 @@ it.each([
   expect(row.queryByText('SPOILED')).toBeNull()
   expect(row.queryByText('DAMAGED')).toBeNull()
   expect(row.getByText('3.25')).toBeTruthy()
-  expect(row.getByRole('button', { name: 'Review & Resolve' })).toBeTruthy()
+  expect(row.getByRole('button', { name: 'Review Stock' })).toBeTruthy()
 })
 
 it('identifies damaged outgoing returns without suggesting manual stock creation', async () => {
@@ -229,7 +229,7 @@ it('shows an empty state and allows zero-balance lots to be inspected without ac
 it('handles a genuinely empty quarantine list', async () => {
   mount({ lots: [] })
   expect(await screen.findByText(/No quarantine lots match these filters/)).toBeTruthy()
-  expect(screen.queryByRole('button', { name: /Review & Resolve/ })).toBeNull()
+  expect(screen.queryByRole('button', { name: /Review Stock/ })).toBeNull()
 })
 
 it('does not invent missing product or warehouse context or allow an unidentified stock resolution', async () => {
@@ -247,7 +247,7 @@ it('shows loading and recoverable list errors', async () => {
     release = resolve
   })
   mount({ deferList: deferred, listFailure: true })
-  expect(screen.queryByRole('button', { name: 'Review & Resolve' })).toBeNull()
+  expect(screen.queryByRole('button', { name: 'Review Stock' })).toBeNull()
   release()
   expect(await screen.findByRole('alert')).toBeTruthy()
   expect(
@@ -263,7 +263,7 @@ it('explains quarantine load failures without exposing routing validation and al
   expect(alert.textContent).not.toMatch(/numeric string|Validation failed|quarantine-lots/i)
   options.listErrorStatus = undefined
   fireEvent.click(screen.getByRole('button', { name: 'Retry quarantine list' }))
-  expect(await screen.findByRole('button', { name: 'Review & Resolve' })).toBeTruthy()
+  expect(await screen.findByRole('button', { name: 'Review Stock' })).toBeTruthy()
   expect(screen.queryByRole('alert')).toBeNull()
 })
 

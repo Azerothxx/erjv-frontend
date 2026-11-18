@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { afterEach, expect, it, vi } from 'vitest'
 import { ClientModal } from '@/components/crm/ClientModal'
@@ -6,17 +6,33 @@ import { SupplierModal } from '@/components/purchases/SupplierModal'
 import { EmployeeModal } from '@/components/staffing/EmployeeModal'
 import { JobModal } from '@/components/staffing/JobModal'
 import { RegisterUserModal } from '@/components/staffing/RegisterUserModal'
-import { createSupplierApi } from './logistics/suppliers.api'
+import { useCreateSupplier } from './logistics/suppliers.hooks'
 import { apiClient } from '@/lib/api-client'
+import { Toaster } from '@/components/ui/sonner'
+import { toast } from '@/lib/notifications'
 
 const originalAdapter = apiClient.defaults.adapter
 vi.mock('@/features/auth/AuthContext', () => ({
   useAuth: () => ({ isAdmin: true, isManager: false }),
 }))
 afterEach(() => {
+  toast.dismiss()
   apiClient.defaults.adapter = originalAdapter
   vi.useRealTimers()
 })
+
+function SupplierForm({ onClose }: { onClose: () => void }) {
+  const create = useCreateSupplier()
+  return (
+    <SupplierModal
+      open
+      onClose={onClose}
+      onSubmit={async (values) => {
+        await create.mutateAsync(values)
+      }}
+    />
+  )
+}
 
 it.each(['customer', 'supplier', 'employee', 'job', 'account'] as const)(
   'sends one %s creation for duplicate submissions and allows retry after a failed save',
@@ -53,16 +69,11 @@ it.each(['customer', 'supplier', 'employee', 'job', 'account'] as const)(
     const onClose = vi.fn()
     render(
       <QueryClientProvider client={client}>
+        <Toaster />
         {kind === 'customer' ? (
           <ClientModal open client={null} onClose={onClose} />
         ) : kind === 'supplier' ? (
-          <SupplierModal
-            open
-            onClose={onClose}
-            onSubmit={async (values) => {
-              await createSupplierApi(values)
-            }}
-          />
+          <SupplierForm onClose={onClose} />
         ) : kind === 'employee' ? (
           <EmployeeModal open employee={null} onClose={onClose} />
         ) : kind === 'job' ? (
@@ -105,7 +116,7 @@ it.each(['customer', 'supplier', 'employee', 'job', 'account'] as const)(
       release()
       await gate
     })
-    await screen.findByText(/Save unavailable/)
+    await within(screen.getByRole('region', { name: /Application notifications/ })).findByText(/Save unavailable/)
     expect(onClose).not.toHaveBeenCalled()
     expect(writes).toHaveLength(1)
     expect((name as HTMLInputElement).value).toBe(
