@@ -70,4 +70,5 @@ jobs:
 
       - name: Report successful production build
         if: success() && steps.build-config.outputs.enabled == 'true'
-        run: echo "### Production build: passed on Node.js 22" >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          echo "### Production build: passed on Node.js 22" >> "$GITHUB_STEP_SUMMARY"
