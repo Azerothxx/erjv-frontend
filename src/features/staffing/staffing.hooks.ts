@@ -618,11 +618,9 @@ export function useUpdateUserPassword() {
   return useMutation({
     mutationFn: ({ id, password }: { id: number; password: string }) =>
       updateUserPasswordApi(id, password),
-    onSuccess: () => {
-      toast.success('Password updated successfully')
+    onSuccess: (updated) => {
+      toast.success(`Password reset for ${updated.fullName || updated.email}`)
     },
-    onError: (err) => {
-      toast.error(getErrorMessage(err))
-    },
+    // The reset dialog shows failures inline, so no error toast here.
   })
 }
