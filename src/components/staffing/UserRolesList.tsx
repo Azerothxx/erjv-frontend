@@ -17,6 +17,7 @@ import {
   Check,
   UserPlus,
   AlertCircle,
+  KeyRound,
 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -47,6 +48,7 @@ import { Button } from '../ui/button'
 import { ArchiveTabNav } from '@/components/ui/ArchiveTabNav'
 import { ConfirmDeleteModal } from '@/components/ui/ConfirmDeleteModal'
 import { RegisterUserModal } from './RegisterUserModal'
+import { ResetPasswordModal } from './ResetPasswordModal'
 import { getErrorMessage } from '@/lib/api-client'
 
 // Role Badge with strict 4x spacing and native button semantics (prevents text selection carets)
@@ -124,6 +126,7 @@ export function UserRolesList() {
   const { isLoading, isFetching, error, reload: refetch } = usersQuery
   const [updatingId, setUpdatingId] = useState<number | null>(null)
   const [userToDeactivate, setUserToDeactivate] = useState<(typeof users)[0] | null>(null)
+  const [userToReset, setUserToReset] = useState<UserAccount | null>(null)
 
   const activeUsers = users.filter((u) => u.isActive !== false)
   const archivedUsers = users.filter((u) => u.isActive === false)
@@ -336,7 +339,22 @@ export function UserRolesList() {
               <DataTableActions
                 onArchive={() => handleDeactivate(u)}
                 isPending={isSelf || isLastAdmin || deactivateUser.isPending}
-              />
+              >
+                {/* Resetting your own password would end your session; hidden like self-archive. */}
+                {!isSelf && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="size-8 shrink-0 text-muted-foreground hover:text-foreground pointer-coarse:size-11"
+                    onClick={() => setUserToReset(u)}
+                    title="Reset Password"
+                    aria-label={`Reset password for ${displayName}`}
+                  >
+                    <KeyRound aria-hidden="true" />
+                  </Button>
+                )}
+              </DataTableActions>
             )}
           </>
         )
@@ -537,6 +555,9 @@ export function UserRolesList() {
 
       {/* Register User Modal (Admin Only) */}
       <RegisterUserModal open={isRegisterModalOpen} onClose={() => setIsRegisterModalOpen(false)} />
+
+      {/* Reset Password Modal (Admin Only) */}
+      {isAdmin && <ResetPasswordModal user={userToReset} onClose={() => setUserToReset(null)} />}
     </div>
   )
 }
